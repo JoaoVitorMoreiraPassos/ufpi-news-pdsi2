@@ -1,0 +1,9 @@
+.passwordInput {
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.passwordInput:focus-within {
+    border: 1px solid #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+}

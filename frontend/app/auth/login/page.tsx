@@ -1,22 +1,48 @@
 'use client';
 import Image from "next/image";
-import InputPassword from "@/app/components/InputPassword";
-import Input from "@/app/components/Input";
+import InputPassword from "@/app/components/Inputs/InputPassword";
+import Input from "@/app/components/Inputs/Input";
 import React from "react";
-import './style.css';
 import { Fredoka } from "next/font/google";
+import UserApi from "@/app/api/user";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Title from "@/app/components/Title";
 
 const fredoka = Fredoka({ subsets: ["latin"] });
 
-export default function Home() {
+export default function Login() {
 
     const [infos, setInfos] = React.useState({
-        user: '',
+        username: '',
         password: '',
     });
 
+    const validate = () => {
+        if (infos.username === '' || infos.password === '') {
+            toast.error('Preencha todos os campos!');
+            return false;
+        }
+        return true;
+    }
+
+    const login = async () => {
+        if (validate()) {
+            try {
+                const response = await UserApi.login(infos);
+                localStorage.setItem('acessToken', response.access);
+                localStorage.setItem('refreshToken', response.refresh);
+                toast.success('Login efetuado com sucesso!');
+                window.location.pathname = "/";
+            } catch (error) {
+                toast.error('Usuário ou senha inválidos!');
+            }
+        }
+    }
+
     return (
         <main className="flex min-h-screen flex-col items-center justify-center relative ">
+            <ToastContainer />
             <div className="flex flex-col w-auto h-auto m-auto bg-slate-50 rounded-3xl p-7 gap-8 relative pt-16"
                 style={
                     {
@@ -35,42 +61,14 @@ export default function Home() {
                     <Image src="/logo_svg.png" alt="Logo" width={70} height={70}
                         className="flex items-center justify-center" />
                 </div>
-                <div className={"flex items-center justify-center relative " + fredoka.className}
-                    style={{
-                        fontWeight: "bold",
-                        color: "#3C3C3C"
-                    }}
-                >
-                    <span style={
-                        {
-                            fontSize: "2.3rem",
-                            fontWeight: "bold",
-                            color: "#4C84F2",
-
-                        }
-                    }>&lt;</span>
-                    <span
-                        style={
-                            {
-                                fontSize: "2.5rem",
-                            }
-                        }
-                    >Faça Login</span>
-                    <span style={
-                        {
-                            fontSize: "2.3rem",
-                            fontWeight: "bold",
-                            color: "#4C84F2",
-                        }
-                    }>/&gt;</span>
-                </div>
+                <Title title="Faça Login" />
                 <div className="gap-1 flex flex-col">
                     <div className=" gap-4 flex flex-col">
-                        <Input type="text" placeholder="Usuário" value={infos.user} setValue={(value) => setInfos({ ...infos, user: value })} />
-                        <InputPassword value={infos.password} setValue={(value) => setInfos({ ...infos, password: value })} />
+                        <Input type="text" placeholder="Usuário" value={infos.username} setValue={(value) => setInfos({ ...infos, username: value })} submit={login} />
+                        <InputPassword value={infos.password} setValue={(value) => setInfos({ ...infos, password: value })} submit={login} />
                     </div>
                     <div className="flex flex-row justify-end h-4">
-                        <a href=""
+                        <a href="/auth/recover"
                             style={
                                 {
                                     color: "#3B82F6",
@@ -87,6 +85,7 @@ export default function Home() {
                             fontSize: "1.5rem",
                             fontWeight: "500",
                         }}
+                        onClick={login}
                     >Entrar</button>
                 </div>
 
@@ -95,11 +94,11 @@ export default function Home() {
                         { fontSize: "0.75rem" }
                     }>
                     <span className=" text-gray-500">Não tem uma conta?</span>
-                    <a href="/auth/register"
-                        style={
-                            { color: "#3B82F6" }
-
-                        }>Cadastre-se aqui.</a>
+                    <a href="/auth/register" style={
+                        {
+                            color: "#3B82F6"
+                        }
+                    }>Cadastre-se aqui.</a>
                 </div>
             </div>
         </main >

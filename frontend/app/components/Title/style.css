@@ -1,0 +1,59 @@
+.titleM {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.titleBe {
+    font-size: 2.3rem;
+    font-weight: bold;
+    color: #4C84F2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width: 425px) {
+    .titleM {
+        font-size: 2.3rem;
+    }
+
+    .titleBe {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .titleM {
+        font-size: 2rem;
+    }
+
+    .titleBe {
+        font-size: 1.8rem;
+    }
+
+}
+
+@media screen and (max-width: 375px) {
+    .titleM {
+        font-size: 1.8rem;
+    }
+
+    .titleBe {
+        font-size: 1.6rem;
+    }
+
+}
+
+@media screen and (max-width: 320px) {
+    .titleM {
+        font-size: 1.6rem;
+    }
+
+    .titleBe {
+        font-size: 1.4rem;
+    }
+}

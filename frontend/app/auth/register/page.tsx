@@ -1,27 +1,70 @@
 'use client';
 import Image from "next/image";
-import InputPassword from "@/app/components/InputPassword";
-import Input from "@/app/components/Input";
+import InputPassword from "@/app/components/Inputs/InputPassword";
+import Input from "@/app/components/Inputs/Input";
 import React from "react";
 import { Fredoka } from "next/font/google";
-
+import UserApi from "@/app/api/user";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Title from "@/app/components/Title";
 
 const fredoka = Fredoka({ subsets: ["latin"] });
 
-export default function Home() {
+export default function Register() {
 
     const [infos, setInfos] = React.useState({
-        name: '',
-        user: '',
+        first_name: '',
+        last_name: '',
+        username: '',
         email: '',
         password: '',
     });
 
-    React.useEffect(() => {
-        console.log(infos.email)
-    }, [infos.email])
+    const validate = () => {
+        if (infos.first_name === '' || infos.last_name == '' || infos.username === '' || infos.email === '' || infos.password === '') {
+            return false;
+        }
+        const email = infos.email;
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailRegex.test(email)) {
+            toast.error('Email inválido!');
+            let input: HTMLInputElement | null = document.querySelector('input[type="email"]');
+            if (input) {
+                input.focus();
+            }
+            return false;
+        }
+        // validate password
+        const password = infos.password;
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            toast.error('A senha deve conter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula e um número!');
+            let input: HTMLInputElement | null = document.querySelector('input[type="password"]');
+            if (input) {
+                input.focus();
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+
+    const register = async () => {
+        if (validate()) {
+            try {
+                await UserApi.register(infos);
+                window.location.pathname = "/auth/login";
+            } catch (error) {
+                toast.error('Erro ao cadastrar usuário!');
+            }
+        }
+    }
+
     return (
         <main className="flex min-h-screen flex-col items-center justify-center relative ">
+            <ToastContainer />
             <div className="flex flex-col w-auto h-auto m-auto bg-slate-50 rounded-3xl p-7 gap-8 relative pt-16"
                 style={
                     {
@@ -40,52 +83,17 @@ export default function Home() {
                     <Image src="/logo_svg.png" alt="Logo" width={70} height={70}
                         className="flex items-center justify-center" />
                 </div>
-                <div className={"flex items-center justify-center relative " + fredoka.className}
-                    style={{
-                        fontWeight: "bold",
-                        color: "#3C3C3C"
-                    }}
-                >
-                    <span style={
-                        {
-                            fontSize: "2.3rem",
-                            fontWeight: "bold",
-                            color: "#4C84F2",
-
-                        }
-                    }>&lt;</span>
-                    <span
-                        style={
-                            {
-                                fontSize: "2.5rem",
-                            }
-                        }
-                    >
-                        Bem Vindo
-                    </span>
-                    <span style={
-                        {
-                            fontSize: "2.3rem",
-                            fontWeight: "bold",
-                            color: "#4C84F2",
-                        }
-                    }>/&gt;</span>
-                </div>
+                <Title title="Bem-Vindo" />
                 <div className="gap-1 flex flex-col">
                     <div className=" gap-4 flex flex-col">
-                        <Input type="text" placeholder="Nome" value={infos.name} setValue={(value) => setInfos({ ...infos, name: value })} />
-                        <Input type="text" placeholder="Usuário" value={infos.user} setValue={(value) => setInfos({ ...infos, user: value })} />
-                        <Input type="email" placeholder="Email" value={infos.email} setValue={(value) => setInfos({ ...infos, email: value })} />
-                        <InputPassword value={infos.password} setValue={(value) => setInfos({ ...infos, password: value })} />
-                    </div>
-                    <div className="flex flex-row justify-end h-4">
-                        <a href=""
-                            style={
-                                {
-                                    color: "#3B82F6",
-                                    fontSize: "0.75rem"
-                                }
-                            }>Esqueceu sua senha?</a>
+                        <div className="flex flex-row gap-1">
+                            <Input type="text" placeholder="Nome" value={infos.first_name} setValue={(value) => setInfos({ ...infos, first_name: value })} submit={register} />
+                            <Input type="text" placeholder="Sobrenome" value={infos.last_name} setValue={(value) => setInfos({ ...infos, last_name: value })} submit={register} />
+
+                        </div>
+                        <Input type="text" placeholder="Usuário" value={infos.username} setValue={(value) => setInfos({ ...infos, username: value })} submit={register} />
+                        <Input type="email" placeholder="Email" value={infos.email} setValue={(value) => setInfos({ ...infos, email: value })} submit={register} />
+                        <InputPassword value={infos.password} setValue={(value) => setInfos({ ...infos, password: value })} submit={register} />
                     </div>
                 </div>
 
@@ -96,6 +104,7 @@ export default function Home() {
                             fontSize: "1.5rem",
                             fontWeight: "500",
                         }}
+                        onClick={register}
                     >
                         Cadastrar
                     </button>

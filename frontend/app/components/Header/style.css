@@ -32,6 +32,18 @@ nav ul li a {
     padding-inline: .5rem;
 }
 
+.first {
+    left: 0;
+}
+
+.second {
+    left: 80px;
+}
+
+.third {
+    left: 160px;
+}
+
 @media screen and (max-width: 1024px) {
     .HeaderContainer {
         padding-inline: 5rem;

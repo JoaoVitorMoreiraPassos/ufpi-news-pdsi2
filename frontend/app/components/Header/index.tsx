@@ -10,13 +10,13 @@ import './style.css'
 const Header = () => {
 
     const [user, setUser] = React.useState({
-        name: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') ?? '')?.name : '',
-        email: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') ?? '')?.email : '',
-        avatar: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') ?? '')?.avatar : '',
+        name: '',
+        email: '',
+        avatar: '',
     });
 
     const [isLogged, setIsLogged] = React.useState(false)
-    const [slidePosition, setSlidePosition] = React.useState('0');
+    const [slidePosition, setSlidePosition] = React.useState('first');
     const [userOptions, setUserOptions] = React.useState(false);
     const logout = () => {
         localStorage.removeItem('acessToken');
@@ -28,20 +28,20 @@ const Header = () => {
         const verify = async () => {
             try {
                 const response = await UserApi.verifyToken(localStorage.getItem('acessToken') ?? '');
-                return response
+                return response;
             } catch (error) {
-                return false
+                return false;
             }
         }
         const path = window.location.pathname;
         if (path === '/') {
-            setSlidePosition('0');
+            setSlidePosition('first');
         }
         if (path === '/contato') {
-            setSlidePosition('20');
+            setSlidePosition('second');
         }
         if (path === '/sobre') {
-            setSlidePosition('40');
+            setSlidePosition('third');
         }
 
         const userInfos = localStorage.getItem('user');
@@ -65,17 +65,17 @@ const Header = () => {
         const links: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('nav ul li a');
 
         switch (slidePosition) {
-            case '0':
+            case 'first':
                 links[0].classList.add('text-blue-500');
                 links[1].classList.remove('text-blue-500');
                 links[2].classList.remove('text-blue-500');
                 break;
-            case '20':
+            case 'second':
                 links[1].classList.add('text-blue-500');
                 links[0].classList.remove('text-blue-500');
                 links[2].classList.remove('text-blue-500');
                 break;
-            case '40':
+            case 'third':
                 links[2].classList.add('text-blue-500');
                 links[0].classList.remove('text-blue-500');
                 links[1].classList.remove('text-blue-500');
@@ -89,15 +89,15 @@ const Header = () => {
         const path = window.location.pathname;
         const links: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('nav ul li a');
         if (path === '/') {
-            setSlidePosition('0');
+            setSlidePosition('first');
             links[0].classList.add('text-blue-500');
         }
         if (path === '/contato') {
-            setSlidePosition('20');
+            setSlidePosition('second');
             links[1].classList.add('text-blue-500');
         }
         if (path === '/sobre') {
-            setSlidePosition('40');
+            setSlidePosition('third');
             links[2].classList.add('text-blue-500');
         }
     }
@@ -128,23 +128,23 @@ const Header = () => {
             <nav className='text-white relative'>
                 <ul className='flex flex-row gap-4 transition-all duration-300'>
                     <li
-                        onMouseMove={() => setSlidePosition("0")}
+                        onMouseMove={() => setSlidePosition("first")}
                         onMouseLeave={() => moveSlideToOrigin()}
                     ><a className='transition-all duration-300 ease-in-out'
                         href="/">Home</a></li>
                     <li
-                        onMouseMove={() => setSlidePosition("20")}
+                        onMouseMove={() => setSlidePosition("second")}
                         onMouseLeave={() => moveSlideToOrigin()}
                     ><a className='transition-all duration-300 ease-in-out'
                         href="/sobre">Sobre</a></li>
                     <li
-                        onMouseMove={() => setSlidePosition("40")}
+                        onMouseMove={() => setSlidePosition("third")}
                         onMouseLeave={() => moveSlideToOrigin()}
                     ><a className='transition-all duration-300 ease-in-out'
                         href="/contato">Contato</a></li>
                     <li className=' cursor-pointer'>
                         <div className='bdr h-1/2'></div>
-                        <div className='gap-2 flex items-center px-2'
+                        <div className='gap-3 flex items-center pl-5'
                             onClick={
                                 () => setUserOptions(!userOptions)
                             }>
@@ -166,7 +166,7 @@ const Header = () => {
                         </div>
                     </li>
                 </ul>
-                <div className={'slideBar w-1/5 bg-blue-500 h-2 absolute bottom-0 left-' + slidePosition + ' transition-all duration-300 ease-in-out'}
+                <div className={'slideBar w-1/5 bg-blue-500 h-2 absolute bottom-0 ' + slidePosition + ' transition-all duration-300 ease-in-out'}
                     style={
                         {
                             borderRadius: '0px 5px 0px 5px'

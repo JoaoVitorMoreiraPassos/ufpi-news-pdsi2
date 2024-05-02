@@ -48,8 +48,8 @@ export default function Login() {
                 const response = await UserApi.login(infos);
                 localStorage.setItem('acessToken', response.access);
                 localStorage.setItem('refreshToken', response.refresh);
+                await saveInfos();
                 toast.success('Login efetuado com sucesso!');
-                saveInfos();
                 window.location.pathname = "/";
             } catch (error) {
                 toast.error('Usuário ou senha inválidos!');

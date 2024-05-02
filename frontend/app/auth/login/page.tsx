@@ -25,7 +25,23 @@ export default function Login() {
         }
         return true;
     }
-
+    const saveInfos = async () => {
+        const acessToken = localStorage.getItem('acessToken') ?? '';
+        try {
+            const response = await UserApi.getUser(acessToken);
+            const infos = {
+                name: response.username,
+                email: response.email,
+                avatar: response.foto_perfil,
+            }
+            localStorage.setItem('user', JSON.stringify(infos));
+        } catch (error) {
+            localStorage.removeItem('acessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('user');
+            window.location.pathname = '/auth/login';
+        }
+    }
     const login = async () => {
         if (validate()) {
             try {
@@ -33,6 +49,7 @@ export default function Login() {
                 localStorage.setItem('acessToken', response.access);
                 localStorage.setItem('refreshToken', response.refresh);
                 toast.success('Login efetuado com sucesso!');
+                saveInfos();
                 window.location.pathname = "/";
             } catch (error) {
                 toast.error('Usuário ou senha inválidos!');
@@ -41,9 +58,9 @@ export default function Login() {
     }
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center relative ">
+        <main className="flex min-h-screen flex-col items-center justify-center relative">
             <ToastContainer />
-            <div className="flex flex-col w-auto h-auto m-auto bg-slate-50 rounded-3xl p-7 gap-8 relative pt-16"
+            <div className="flex flex-col w-auto h-auto m-auto bg-white rounded-3xl p-7 gap-8 relative pt-16"
                 style={
                     {
                         border: "2px solid #B7B5B5",
@@ -61,7 +78,9 @@ export default function Login() {
                     <Image src="/logo_svg.png" alt="Logo" width={70} height={70}
                         className="flex items-center justify-center" />
                 </div>
-                <Title title="Faça Login" />
+                <div className=" text-gray-800">
+                    <Title title="Faça Login" />
+                </div>
                 <div className="gap-1 flex flex-col">
                     <div className=" gap-4 flex flex-col">
                         <Input type="text" placeholder="Usuário" value={infos.username} setValue={(value) => setInfos({ ...infos, username: value })} submit={login} />
@@ -89,7 +108,7 @@ export default function Login() {
                     >Entrar</button>
                 </div>
 
-                <div className="flex flex-colum items-center justify-center gap-1"
+                <div className="flex flex-colum items-center justify-center gap-1 flex-wrap"
                     style={
                         { fontSize: "0.75rem" }
                     }>

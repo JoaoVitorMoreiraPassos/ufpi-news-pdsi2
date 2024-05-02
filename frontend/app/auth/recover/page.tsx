@@ -89,7 +89,9 @@ const Recover = () => {
                     <Image src="/logo_svg.png" alt="Logo" width={70} height={70}
                         className="flex items-center justify-center" />
                 </div>
-                <Title title="Recuperar Senha" />
+                <div className=' text-gray-800'>
+                    <Title title="Recuperar Senha" />
+                </div>
                 <div className="gap-1 flex flex-col">
                     <div className=" gap-4 flex flex-col">
                         <Input type="email" placeholder="Email" value={infos.email} setValue={(value) => setInfos({ ...infos, email: value })} submit={sendEmail} />

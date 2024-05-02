@@ -8,6 +8,7 @@ import UserApi from "@/app/api/user";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Title from "@/app/components/Title";
+import { time } from "console";
 
 const fredoka = Fredoka({ subsets: ["latin"] });
 
@@ -55,6 +56,10 @@ export default function Register() {
         if (validate()) {
             try {
                 await UserApi.register(infos);
+                toast.success('Usuário cadastrado com sucesso!');
+                setTimeout(() => {
+                    window.location.pathname = "/auth/login";
+                }, 2000);
                 window.location.pathname = "/auth/login";
             } catch (error) {
                 toast.error('Erro ao cadastrar usuário!');
@@ -65,7 +70,7 @@ export default function Register() {
     return (
         <main className="flex min-h-screen flex-col items-center justify-center relative ">
             <ToastContainer />
-            <div className="flex flex-col w-auto h-auto m-auto bg-slate-50 rounded-3xl p-7 gap-8 relative pt-16"
+            <div className="flex flex-col w-auto h-auto m-auto bg-slate-50 rounded-3xl p-7 gap-8 relative pt-16 min-w-72"
                 style={
                     {
                         border: "2px solid #B7B5B5",
@@ -83,7 +88,9 @@ export default function Register() {
                     <Image src="/logo_svg.png" alt="Logo" width={70} height={70}
                         className="flex items-center justify-center" />
                 </div>
-                <Title title="Bem-Vindo" />
+                <div className=" text-gray-800">
+                    <Title title="Bem-Vindo" />
+                </div>
                 <div className="gap-1 flex flex-col">
                     <div className=" gap-4 flex flex-col">
                         <div className="flex flex-row gap-1">
@@ -110,7 +117,7 @@ export default function Register() {
                     </button>
                 </div>
 
-                <div className="flex flex-colum items-center justify-center gap-1"
+                <div className="flex flex-colum items-center justify-center gap-1 flex-wrap"
                     style={
                         { fontSize: "0.75rem" }
                     }>

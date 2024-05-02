@@ -6,7 +6,7 @@ const fredoka = Fredoka({ subsets: ['latin'] })
 
 const Title = ({ title }: { title: string }) => {
     return (
-        <div className={"flex items-center justify-center relative " + fredoka.className}
+        <div className={"flex items-center justify-center relative w-full " + fredoka.className}
             style={{
                 fontWeight: "bold",
             }}

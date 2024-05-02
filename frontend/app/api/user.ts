@@ -44,7 +44,7 @@ class UserApi {
             this.url + 'jwt/verify/',
             { token: token }
         )
-        return response.data;
+        return response;
     }
 
     async recoverPassword(infos: { email: string }) {

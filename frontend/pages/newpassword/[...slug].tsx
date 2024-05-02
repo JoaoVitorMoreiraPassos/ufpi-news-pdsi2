@@ -85,16 +85,14 @@ const Confirmar = () => {
                         className="flex items-center justify-center" />
                 </div>
                 <Title title="Mudar Senha" />
-                <div className="gap-1 flex flex-col">
+                <div className={"gap-1 flex flex-col  " + fredoka.className}>
                     <div className=" gap-4 flex flex-col text-gray-900">
                         <div>
-                            <label>Senha 1:</label>
+                            <label className='text-sm'>Nova Senha</label>
                             <InputPassword value={infos.new_password} setValue={(value) => setInfos({ ...infos, new_password: value })} submit={changePassword} />
-
                         </div>
                         <div>
-
-                            <label>Senha 2:</label>
+                            <label className='text-sm'>Confirmar Nova Senha</label>
                             <InputPassword value={infos.re_new_password} setValue={(value) => setInfos({ ...infos, re_new_password: value })} submit={changePassword} />
                         </div>
                     </div>

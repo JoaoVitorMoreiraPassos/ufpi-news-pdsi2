@@ -126,7 +126,7 @@ const Header = () => {
                 </div>
             </a>
             <nav className='text-white relative'>
-                <ul className='flex flex-row gap-4 transition-all duration-300'>
+                <ul className='flex flex-row transition-all duration-300'>
                     <li
                         onMouseMove={() => setSlidePosition("first")}
                         onMouseLeave={() => moveSlideToOrigin()}
@@ -149,7 +149,7 @@ const Header = () => {
                                 () => setUserOptions(!userOptions)
                             }>
                             <span>{
-                                user.name ? user.name : 'Usuário'
+                                user.name ? user.name : ''
                             }</span>
                             {
                                 user.avatar ? (
@@ -176,8 +176,14 @@ const Header = () => {
                 </div>
             </nav >
             <div className={"userOptions absolute right-20 bg-white rounded-3xl p-4 shadow-lg transition-all duration-400 ease-in-out " +
-                (userOptions ? "block + top-16" : " -top-28") + " z-10"
+                (userOptions ? "block + top-20" : " -top-28") + " z-10"
             }>
+                <div className='h-2 w-4 bg-white absolute -top-2 left-11'
+                    style={
+                        {
+                            clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'
+                        }
+                    }></div>
                 {
                     isLogged ? (
                         <ul className="flex flex-col gap-2">

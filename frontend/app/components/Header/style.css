@@ -29,19 +29,19 @@ nav ul li a {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-inline: .5rem;
+    padding-inline: 1rem;
 }
 
 .first {
-    left: 0;
+    left: 4px;
 }
 
 .second {
-    left: 80px;
+    left: 82px;
 }
 
 .third {
-    left: 160px;
+    left: 166.5px;
 }
 
 @media screen and (max-width: 1024px) {

@@ -7,7 +7,7 @@ import { faUserAlt } from '@fortawesome/free-solid-svg-icons';
 import UserApi from '../../api/user';
 import './style.css'
 
-const Header = () => {
+const Header = ({ SideBarController, setSideBarController }: { SideBarController: boolean, setSideBarController: React.Dispatch<React.SetStateAction<boolean>> }) => {
 
     const [user, setUser] = React.useState({
         name: '',
@@ -62,23 +62,23 @@ const Header = () => {
         }
     }, [])
     React.useEffect(() => {
-        const links: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('nav ul li a');
+        const links: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('header nav ul li a');
 
         switch (slidePosition) {
             case 'first':
-                links[0].classList.add('text-blue-500');
-                links[1].classList.remove('text-blue-500');
-                links[2].classList.remove('text-blue-500');
+                links[0]?.classList.add('text-blue-500');
+                links[1]?.classList.remove('text-blue-500');
+                links[2]?.classList.remove('text-blue-500');
                 break;
             case 'second':
-                links[1].classList.add('text-blue-500');
-                links[0].classList.remove('text-blue-500');
-                links[2].classList.remove('text-blue-500');
+                links[1]?.classList.add('text-blue-500');
+                links[0]?.classList.remove('text-blue-500');
+                links[2]?.classList.remove('text-blue-500');
                 break;
             case 'third':
-                links[2].classList.add('text-blue-500');
-                links[0].classList.remove('text-blue-500');
-                links[1].classList.remove('text-blue-500');
+                links[2]?.classList.add('text-blue-500');
+                links[0]?.classList.remove('text-blue-500');
+                links[1]?.classList.remove('text-blue-500');
                 break;
             default:
                 break;
@@ -87,30 +87,37 @@ const Header = () => {
     }, [slidePosition])
     const moveSlideToOrigin = () => {
         const path = window.location.pathname;
-        const links: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('nav ul li a');
+        const links: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('header nav ul li a');
         if (path === '/') {
             setSlidePosition('first');
-            links[0].classList.add('text-blue-500');
+            links[0]?.classList.add('text-blue-500');
         }
         if (path === '/contato') {
             setSlidePosition('second');
-            links[1].classList.add('text-blue-500');
+            links[1]?.classList.add('text-blue-500');
         }
         if (path === '/sobre') {
             setSlidePosition('third');
-            links[2].classList.add('text-blue-500');
+            links[2]?.classList.add('text-blue-500');
         }
     }
 
     return (
-        <div className='HeaderContainer flex flex-row items-center justify-between w-full px-28 relative
-        '
-            style={{
-                height: '70px',
-                background: '#3C3C3C',
-                backgroundColor: '#3C3C3C',
-            }}>
-
+        <header className=' flex flex-row items-center w-full fixed '>
+            <div className='hamburguer flex flex-col items-center justify-center cursor-pointer absolute top-1/2 transform -translate-y-1/2 transition-all duration-300 ease-in-out'
+                onClick={() => {
+                    setSideBarController(!SideBarController)
+                    let sideBar = document.querySelector('aside');
+                    sideBar?.classList.remove('cls');
+                    sideBar?.classList.remove('w-0');
+                    sideBar?.classList.remove('p-0');
+                    sideBar?.classList.add('opn');
+                }}
+            >
+                <div className='bg-white w-8 h-1 rounded-full'></div>
+                <div className='bg-white w-8 h-1 rounded-full mt-1'></div>
+                <div className='bg-white w-8 h-1 rounded-full mt-1'></div>
+            </div>
             <a href="/" className='headerLogo flex flex-row items-center gap-4 text-white relative' >
                 <Title title='UFPI News' />
                 <div className=" rounded-full w-14 h-14 absolute logo p-2 flex justify-center items-center"
@@ -216,7 +223,7 @@ const Header = () => {
                     )
                 }
             </div>
-        </div >
+        </header >
     )
 }
 

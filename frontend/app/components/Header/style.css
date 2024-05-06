@@ -1,29 +1,27 @@
-nav {
+header nav {
     height: 100%;
-    display: flex;
     flex-direction: row;
-
 }
 
-nav ul {
+header nav ul {
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-nav ul li {
+header nav ul li {
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-nav ul li:last-child .bdr {
+header nav ul li:last-child .bdr {
     border-left: 1px solid #fff;
 }
 
-nav ul li a {
+header nav ul li a {
     width: 100%;
     height: 100%;
     display: flex;
@@ -32,35 +30,25 @@ nav ul li a {
     padding-inline: 1rem;
 }
 
+header .hamburguer {
+    left: 1rem;
+}
+
 .first {
-    left: 4px;
+    left: 6px;
 }
 
 .second {
-    left: 82px;
+    left: 88px;
 }
 
 .third {
-    left: 166.5px;
+    left: 168.5px;
 }
 
-@media screen and (max-width: 1024px) {
-    .HeaderContainer {
-        padding-inline: 5rem;
+@media screen and (max-width: 470px) {
+    header .hamburguer {
+        left: auto;
+        right: 1rem;
     }
-
-}
-
-@media screen and (max-width: 890px) {
-
-    .HeaderContainer {
-        padding: 0;
-        justify-content: center;
-        padding-left: 20px;
-    }
-
-    nav {
-        display: none;
-    }
-
 }

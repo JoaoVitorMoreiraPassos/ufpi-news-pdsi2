@@ -21,6 +21,17 @@ body {
   background: var(--background-start-rgb)
 }
 
+header {
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 12rem;
+  padding-right: 8rem;
+  background: #3c3c3c;
+  border-bottom: 1px solid #eee;
+}
+
 main {
   background: #CCCCCC;
   width: 100%;
@@ -29,11 +40,74 @@ main {
 
 .my-container {
   width: 100%;
-  height: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+aside {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding: 1rem;
+  width: 27rem;
+  width: max-content;
+  border-bottom: 1px solid #eee;
+}
+
+footer {
+  flex-direction: row;
+  gap: 1rem;
+  padding-inline: 5rem;
+  justify-content: center;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  header {
+    padding-right: 5rem;
+    padding-left: 8rem;
+  }
+}
+
+@media screen and (max-width: 890px) {
+
+  header {
+    display: flex;
+    padding: 0;
+    justify-content: center;
+    padding-left: 20px;
+    padding-inline: 0;
+  }
+
+  header nav {
+    display: none;
+  }
+
+  aside {
+    width: 100%;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+  aside {
+    width: 100%;
+  }
+
+  footer {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 3rem;
+    padding-inline: 0;
   }
 }

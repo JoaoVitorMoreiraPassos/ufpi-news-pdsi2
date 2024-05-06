@@ -1,0 +1,99 @@
+aside nav ul li:not(:has(ul)) {
+    display: flex;
+    gap: .05rem;
+    align-items: center;
+}
+
+aside nav ul li a {
+    width: 100%;
+    height: 100%;
+    padding: .5rem 1rem;
+}
+
+aside nav ul li {
+    width: 100%;
+}
+
+aside nav ul {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem
+}
+
+aside nav {
+    width: 100%;
+}
+
+aside * a:hover {
+    background: #fff;
+    color: #000;
+    border-radius: 1rem;
+}
+
+.opn {
+    animation: open ease-in-out 250ms forwards;
+}
+
+.cls {
+    animation: close ease-in-out 250ms forwards;
+}
+
+@keyframes open {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 27rem;
+    }
+}
+
+@keyframes close {
+    from {
+        width: 27rem;
+    }
+
+    to {
+        width: 0;
+        padding: 0
+    }
+}
+
+@media screen and (max-width: 768px) {
+    aside {
+        width: 100%;
+    }
+
+    footer {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        gap: 3rem;
+    }
+
+    @keyframes open {
+        from {
+            width: 0;
+        }
+
+        to {
+            width: 100%;
+        }
+    }
+
+    @keyframes close {
+        from {
+            width: 100%;
+        }
+
+        to {
+            width: 0;
+            padding: 0
+        }
+    }
+
+}

@@ -103,7 +103,7 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
     }
 
     return (
-        <header className=' flex flex-row items-center w-full fixed '>
+        <header className=' flex flex-row items-center w-full fixed z-50'>
             <div className='hamburguer flex flex-col items-center justify-center cursor-pointer absolute top-1/2 transform -translate-y-1/2 transition-all duration-300 ease-in-out'
                 onClick={() => {
                     setSideBarController(!SideBarController)

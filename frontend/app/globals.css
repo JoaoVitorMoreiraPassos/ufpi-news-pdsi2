@@ -33,9 +33,16 @@ header {
 }
 
 main {
+  margin-top: 5rem;
   background: #CCCCCC;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 4rem;
 }
 
 .my-container {
@@ -61,6 +68,8 @@ footer {
   padding-inline: 5rem;
   justify-content: center;
 }
+
+
 
 @layer utilities {
   .text-balance {

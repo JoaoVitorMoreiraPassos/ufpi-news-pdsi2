@@ -26,7 +26,7 @@ const FoodMenu = ({ meal, data }: { meal: string, data: string[] }) => {
                             return <li
                                 className="overflow-hidden  overflow-ellipsis w-full "
                                 style={{
-                                    fontSize: "clamp(.7rem, 1.5vw, 1rem)",
+                                    fontSize: "clamp(.7rem, 1.5vw, .8rem)",
                                     wordBreak: "break-word",
                                 }}
                                 key={index}>

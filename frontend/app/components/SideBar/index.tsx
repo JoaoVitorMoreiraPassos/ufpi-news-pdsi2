@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Title from '../Title'
 import './style.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faX } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faPlay, faX } from '@fortawesome/free-solid-svg-icons';
 
 const SideBar = ({ controller, setController }: { controller: boolean, setController: React.Dispatch<React.SetStateAction<boolean>> }) => {
 
@@ -73,10 +73,10 @@ const SideBar = ({ controller, setController }: { controller: boolean, setContro
                                 setCaIsOpen(!CaIsOpen);
                             }}
                         >
-                            <span className={' text-blue-600 transition-all duration-200' +
+                            <span className={' text-blue-600 transition-all duration-300' +
                                 (CaIsOpen ? ' transform rotate-90' : '')
                             }>
-                                {'►'}
+                                <FontAwesomeIcon icon={faPlay} className='text-blue-600'></FontAwesomeIcon>
                             </span>
                             <div className='pl-4 py-2  hover:underline  items-center hover:rounded-2xl w-full
                             flex flex-row justify-start

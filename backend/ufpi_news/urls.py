@@ -34,3 +34,8 @@ urlpatterns = [
     # Rota para atualizar o token é api/v1/jwt/refresh/
     # Rota para verificar o token é api/v1/jwt/verify/ (Essa aqui nem precisa usar, mas já vem com a biblioteca)
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

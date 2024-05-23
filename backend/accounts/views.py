@@ -1,24 +1,23 @@
 from rest_framework.generics import (
-    CreateAPIView, 
-    RetrieveAPIView, 
-    UpdateAPIView, 
+    CreateAPIView,
+    RetrieveAPIView,
+    UpdateAPIView,
     ListAPIView,
 )
 
 from .serializers import (
-    UserSerializer, 
+    UserSerializer,
     UserDetailSerializer,
 )
 
 from rest_framework.permissions import (
-    AllowAny, 
+    AllowAny,
     IsAuthenticated,
 )
 
 from rest_framework.response import Response
 from rest_framework import status, serializers
-
-
+from django.contrib.auth import get_user_model
 
 
 class CadastrarAPIView(CreateAPIView):
@@ -41,7 +40,8 @@ class CadastrarAPIView(CreateAPIView):
             {"message": "Erro ao cadastrar usuário!", "errors": serializer.errors},
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
+
+
 class UserDetailAPIView(RetrieveAPIView):
     serializer_class = UserDetailSerializer
     # authentication_classes = [JWTAuthentication]
@@ -49,3 +49,11 @@ class UserDetailAPIView(RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class SearchUserAPIView(RetrieveAPIView):
+    serializer_class = UserDetailSerializer
+
+    def get_object(self):
+        username = self.kwargs.get("username")
+        return get_user_model().objects.get(username=username)

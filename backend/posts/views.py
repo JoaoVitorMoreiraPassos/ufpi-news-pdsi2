@@ -1,29 +1,27 @@
-from rest_framework import (
-    generics, 
-    status, 
-    permissions
-)
+from rest_framework import generics, status, permissions
+
 # from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+
 # from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import (
-    IsAuthenticated, 
-    DjangoModelPermissions, 
-    IsAuthenticatedOrReadOnly
+    IsAuthenticated,
+    DjangoModelPermissions,
+    IsAuthenticatedOrReadOnly,
 )
 
-from .permissions import HasPostPermissions # Permission customizada
+from .permissions import HasPostPermissions  # Permission customizada
 
 from django.contrib.auth import get_user_model
 
 from .models import (
-    Post, 
-    # Comentario, 
+    Post,
+    # Comentario,
     # Favorito
 )
 from .serializers import (
-    PostSerializer, 
-    # ComentarioSerializer, 
+    PostSerializer,
+    # ComentarioSerializer,
     # FavoritoSerializer
 )
 
@@ -66,10 +64,13 @@ class SearchAPIView(generics.ListAPIView):
         search = self.kwargs.get("search")
         return self.queryset.filter(titulo_post__icontains=search)
 
+
 class SearchPostByAutorAPIView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
     def get_queryset(self):
         search = self.kwargs.get("search")
-        return self.queryset.filter(autor_post__username=search)
+        return self.queryset.filter(autor_post__post_permissoes=True).filter(
+            autor_post__username=search
+        )

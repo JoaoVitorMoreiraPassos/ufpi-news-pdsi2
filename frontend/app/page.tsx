@@ -7,12 +7,14 @@ import FoodMenu from "./components/FoodMenu";
 import NoticesContainer from "./components/NoticesContainer";
 
 
+
 export default function Home() {
 
   const [sideBarControl, setSideBarControl] = React.useState(false);
 
   return (
     <div className="my-container">
+
       <div className="relative w-full">
         <SideBar controller={sideBarControl} setController={setSideBarControl} />
         <Header SideBarController={sideBarControl} setSideBarController={setSideBarControl} />

@@ -17,36 +17,34 @@ const Carousel = ({ children }: { children: React.ReactNode }) => {
 
     React.useEffect(() => {
         const element = document.querySelector('.carousel') as HTMLDivElement;
-        // get the width of the carousel
         const width = element.scrollWidth;
-        if (scrollPostion < 10) {
+        // Block or unblock the left button
+        if (scrollPostion === 0) {
             setLeftButton(false);
-        }
-        else {
+        } else {
             setLeftButton(true);
         }
 
+        // Block or unblock the right button
         if (scrollPostion + element.clientWidth >= width - 10) {
             setRightButton(false);
-        }
-        else {
+        } else {
             setRightButton(true);
         }
-        console.log(scrollPostion, width, element.clientWidth);
-        console.log(leftButton, rightButton);
     }, [scrollPostion])
 
     const handleLeft = () => {
         if (!leftButton) {
             return;
         }
-        const screnWidth = window.innerWidth;
         const element = document.querySelector('.carousel') as HTMLDivElement;
-        const newPosition = scrollPostion - screnWidth;
+        const card = document.querySelector('.card') as HTMLDivElement;
+        const newPosition = scrollPostion - card.clientWidth;
         element.scrollTo({
             left: newPosition,
             behavior: 'smooth'
         });
+        setScrollPosition(newPosition);
     }
 
     const handleRight = () => {
@@ -54,25 +52,31 @@ const Carousel = ({ children }: { children: React.ReactNode }) => {
             return;
         }
         const element = document.querySelector('.carousel') as HTMLDivElement;
-        const screnWidth = window.innerWidth;
-        const newPosition = scrollPostion + screnWidth;
+        const card = document.querySelector('.card') as HTMLDivElement;
+        const newPosition = scrollPostion + card.clientWidth;
         element.scrollTo({
             left: newPosition,
             behavior: 'smooth'
         });
-
+        setScrollPosition(newPosition);
     }
 
     return (
         <div className='flex flex-col gap-0 pt-8'>
-            <div className='w-full flex justify-end gap-1'>
-                <button className={' w-10 h-10 flex flex-row justify-center items-center gap-2 text-blue-500 border-blue-500 rounded-full border-2 hover:bg-blue-500 hover:text-white cursor-pointer'} disabled={!leftButton}>
+
+            <div className='w-full flex justify-end gap-1 max-md:hidden'>
+                <button className={' transition-all duration-200 w-10 h-10 flex flex-row justify-center items-center gap-2  rounded-full border-2 ' +
+                    (leftButton ? ' text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white cursor-pointer' : ' text-gray-300 border-gray-300 cursor-not-allowed')
+                } disabled={!leftButton}>
                     <FontAwesomeIcon icon={faChevronLeft}
+                        className='w-5 h-5'
                         onClick={handleLeft}
                     />
                 </button>
-                <button className=' w-10 h-10 flex flex-row justify-center items-center gap-2 text-blue-500 border-blue-500 rounded-full border-2 hover:bg-blue-500 hover:text-white' disabled={!rightButton}>
-                    <FontAwesomeIcon icon={faChevronRight}
+                <button className={'transition-all duration-200 w-10 h-10 flex flex-row justify-center items-center gap-2  rounded-full border-2' +
+                    (rightButton ? ' text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white cursor-pointer' : ' text-gray-300 border-gray-300 cursor-not-allowed')
+                } disabled={!rightButton}>
+                    <FontAwesomeIcon icon={faChevronRight} className='w-5 h-5'
                         onClick={handleRight}
                     />
                 </button>
@@ -80,7 +84,6 @@ const Carousel = ({ children }: { children: React.ReactNode }) => {
             <div className="carousel flex flex-row items-start overflow-x-auto gap-4 w-full max-sm:px-4 pt-2 pb-8 h-auto"
                 onScroll={handleScroll}
             >
-
                 {children}
             </div>
 

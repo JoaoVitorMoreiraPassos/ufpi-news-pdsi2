@@ -33,6 +33,8 @@ export default function Login() {
                 name: response.username,
                 email: response.email,
                 avatar: response.foto_perfil,
+                permissions: [response.post_permissoes, response.refeicao_permissoes]
+
             }
             localStorage.setItem('user', JSON.stringify(infos));
         } catch (error) {
@@ -50,7 +52,9 @@ export default function Login() {
                 localStorage.setItem('refreshToken', response.refresh);
                 await saveInfos();
                 toast.success('Login efetuado com sucesso!');
-                window.location.pathname = "/";
+                setTimeout(() => {
+                    window.location.pathname = "/";
+                }, 1000);
             } catch (error) {
                 toast.error('Usuário ou senha inválidos!');
             }
@@ -58,7 +62,7 @@ export default function Login() {
     }
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center relative">
+        <main className="flex flex-col items-center justify-center relative">
             <ToastContainer />
             <div className="flex flex-col w-auto h-auto m-auto bg-white rounded-3xl p-7 gap-8 relative pt-16"
                 style={

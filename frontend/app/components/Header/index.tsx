@@ -13,6 +13,7 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
         name: '',
         email: '',
         avatar: '',
+        permissions: [false, false]
     });
 
     const [isLogged, setIsLogged] = React.useState(false)
@@ -37,10 +38,10 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
         if (path === '/') {
             setSlidePosition('first');
         }
-        if (path === '/contato') {
+        if (path === '/sobre') {
             setSlidePosition('second');
         }
-        if (path === '/sobre') {
+        if (path === '/contato') {
             setSlidePosition('third');
         }
 
@@ -60,6 +61,14 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
                 }
             })
         }
+        document.addEventListener('click', (e) => {
+            if (e.target !== document.querySelector('.userOptions') && e.target !== document.querySelector('.openOptions')
+                && e.target !== document.querySelector('.openOptions svg') && e.target !== document.querySelector('.openOptions path')
+                && e.target !== document.querySelector('.openOptions2')
+            ) {
+                setUserOptions(false);
+            }
+        })
     }, [])
     React.useEffect(() => {
         const links: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('header nav ul li a');
@@ -74,29 +83,34 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
                 links[1]?.classList.add('text-blue-500');
                 links[0]?.classList.remove('text-blue-500');
                 links[2]?.classList.remove('text-blue-500');
+
                 break;
             case 'third':
                 links[2]?.classList.add('text-blue-500');
                 links[0]?.classList.remove('text-blue-500');
                 links[1]?.classList.remove('text-blue-500');
+
                 break;
             default:
                 break;
         }
 
     }, [slidePosition])
+
     const moveSlideToOrigin = () => {
         const path = window.location.pathname;
         const links: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('header nav ul li a');
         if (path === '/') {
             setSlidePosition('first');
             links[0]?.classList.add('text-blue-500');
-        }
-        if (path === '/contato') {
-            setSlidePosition('second');
-            links[1]?.classList.add('text-blue-500');
+
         }
         if (path === '/sobre') {
+            setSlidePosition('second');
+            links[1]?.classList.add('text-blue-500');
+
+        }
+        if (path === '/contato') {
             setSlidePosition('third');
             links[2]?.classList.add('text-blue-500');
         }
@@ -129,7 +143,7 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
                         border: "2px solid #fff"
                     }}>
                     <Image src="/logo_svg.png" alt="Logo" width={40} height={40}
-                        className="flex items-center justify-center" />
+                        className="flex items-center justify-center w-10 h-10" />
                 </div>
             </a>
             <nav className='text-white relative'>
@@ -151,25 +165,83 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
                         href="/contato">Contato</a></li>
                     <li className=' cursor-pointer'>
                         <div className='bdr h-1/2'></div>
-                        <div className='gap-3 flex items-center pl-5'
+                        <div className='gap-3 flex items-center ml-5 w-6 h-6 relative '
                             onClick={
                                 () => setUserOptions(!userOptions)
                             }>
-                            <span>{
-                                user.name ? user.name : ''
-                            }</span>
                             {
                                 user.avatar ? (
-                                    <Image src={user.avatar} alt="Usuário" width={20} height={20} />
+                                    <Image src={user.avatar} alt="Usuário" width={20} height={20}
+                                        className="rounded-full w-full h-full openOptions"
+                                        onClick={
+                                            () => setUserOptions(!userOptions)
+                                        }
+                                    />
                                 ) : (
                                     <FontAwesomeIcon icon={faUserAlt} style={{
                                         color: '#fff',
                                         background: '#D2D2D2',
                                         borderRadius: '50%',
                                         padding: '7px'
-                                    }} />
+                                    }} className='h-full w-full openOptions'
+                                        onClick={
+                                            () => setUserOptions(!userOptions)
+                                        } />
                                 )
                             }
+                            <span
+                                className=' openOptions2'
+                                onClick={
+                                    () => setUserOptions(!userOptions)
+                                }
+                            >{
+                                    user.name ? user.name : ''
+                                }</span>
+                            <div className={"flex justify-center w-36 userOptions absolute  bg-white rounded-3xl py-4 shadow-lg transition-all duration-400 ease-in-out " +
+                                (userOptions ? "block + top-16" : " -top-36") + " z-10"
+                            }
+                                style={{
+                                    right: '-4.2rem'
+                                }}
+                            >
+                                <div className='h-2 w-4 bg-white absolute -top-2 left-16'
+                                    style={
+                                        {
+                                            clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'
+                                        }
+                                    }></div>
+                                {
+                                    isLogged ? (
+                                        <ul className="flex flex-col gap-2 w-full items-center">
+                                            <li className='text-blue-500 h-8 flex items-center justify-center w-full'>
+                                                <a href={"/perfil/" + user.name}>
+                                                    Minha conta
+                                                </a>
+                                            </li>
+                                            <li className='text-blue-500 h-8 flex items-center justify-center border-t-2 pt-3 w-full'>
+                                                <button
+                                                    onClick={logout}
+                                                >Sair</button>
+                                            </li>
+
+                                        </ul>
+                                    ) : (
+                                        <ul className="flex flex-col gap-2">
+                                            <li className='text-blue-500 h-8 flex items-center justify-center'>
+                                                <a href="/auth/login">
+                                                    Entrar
+                                                </a>
+                                            </li>
+                                            <li className='text-blue-500 h-8 flex items-center justify-center border-t-2 pt-3'>
+                                                <a href="/auth/register">
+                                                    Cadastrar
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    )
+                                }
+                            </div>
                         </div>
                     </li>
                 </ul>
@@ -182,47 +254,7 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
                 >
                 </div>
             </nav >
-            <div className={"userOptions absolute right-20 bg-white rounded-3xl p-4 shadow-lg transition-all duration-400 ease-in-out " +
-                (userOptions ? "block + top-20" : " -top-28") + " z-10"
-            }>
-                <div className='h-2 w-4 bg-white absolute -top-2 left-11'
-                    style={
-                        {
-                            clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'
-                        }
-                    }></div>
-                {
-                    isLogged ? (
-                        <ul className="flex flex-col gap-2">
-                            <li className='text-blue-500 h-8 flex items-center justify-center'>
-                                <a href="/perfil/">
-                                    Minha conta
-                                </a>
-                            </li>
-                            <li className='text-blue-500 h-8 flex items-center justify-center border-t-2 pt-3'>
-                                <button
-                                    onClick={logout}
-                                >Sair</button>
-                            </li>
 
-                        </ul>
-                    ) : (
-                        <ul className="flex flex-col gap-2">
-                            <li className='text-blue-500 h-8 flex items-center justify-center'>
-                                <a href="/auth/login">
-                                    Entrar
-                                </a>
-                            </li>
-                            <li className='text-blue-500 h-8 flex items-center justify-center border-t-2 pt-3'>
-                                <a href="/auth/register">
-                                    Cadastrar
-                                </a>
-                            </li>
-
-                        </ul>
-                    )
-                }
-            </div>
         </header >
     )
 }

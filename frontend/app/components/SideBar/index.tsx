@@ -17,7 +17,20 @@ const SideBar = ({ controller, setController }: { controller: boolean, setContro
         { id: 6, name: 'Pedagogia', link: '/ca/pedagogia' },
     ]
     const [CaIsOpen, setCaIsOpen] = React.useState(false);
+    const [loggedUser, setLoggedUser] = React.useState({
+        name: '',
+        avatar: '',
+        email: '',
+        permissions: [false, false]
+    });
 
+    React.useEffect(() => {
+        const userInfos = localStorage.getItem('user');
+        if (userInfos) {
+            const user = JSON.parse(userInfos);
+            setLoggedUser(user);
+        }
+    }, []);
     return (
         <aside className={
             " bg-gray-800 flex flex-col justify-start items-start overflow-hidden w-0 p-0 "
@@ -44,9 +57,8 @@ const SideBar = ({ controller, setController }: { controller: boolean, setContro
                 <FontAwesomeIcon icon={faClose} className='text-3xl'></FontAwesomeIcon>
             </div>
 
-            <div className={'flex flex-row items-center max-[md]:justify-center gap-6 w-full  min-[md]:justify-start min-w-96'
-
-            }>
+            <a className={'flex flex-row items-center max-[md]:justify-center gap-6 w-full  min-[md]:justify-start min-w-96'
+            } href='/'>
                 <div className=" rounded-full w-14 h-14 logo p-2 flex flex-row justify-center items-center"
                     style={{
                         background: "#3C3C3C",
@@ -61,7 +73,7 @@ const SideBar = ({ controller, setController }: { controller: boolean, setContro
                 <div className=' text-sm'>
                     <Title title='UFPI News' />
                 </div>
-            </div>
+            </a>
             <nav className=' text-white flex flex-col items-start pr-16'>
                 <ul className="flex flex-col items-start w-full text-white">
                     <li>
@@ -106,6 +118,15 @@ const SideBar = ({ controller, setController }: { controller: boolean, setContro
                     </li>
                     <li>
                         &#9679; <a href="#">Favoritos</a>
+                    </li>
+                    <li className=''>
+                        &#9679; {
+                            loggedUser.name ? (
+                                <a href={"/perfil/" + loggedUser.name}>Perfil</a>
+                            ) : (
+                                <a href="/login">Entrar</a>
+                            )
+                        }
                     </li>
                 </ul>
             </nav>

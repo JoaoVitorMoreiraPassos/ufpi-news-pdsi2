@@ -31,6 +31,13 @@ class UserApi {
         return response.data;
     }
 
+    async searchUser(username: string) {
+        const response = await axios.get(
+            this.url + 'user-detail/' + username + '/'
+        )
+        return response.data;
+    }
+
     async refreshToken(token: string) {
         const response = await axios.post(
             this.url + 'jwt/refresh/',

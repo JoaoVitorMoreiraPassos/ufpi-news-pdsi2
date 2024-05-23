@@ -24,12 +24,10 @@ const Confirmar = () => {
 
     const validate = () => {
         if (infos.new_password === '' || infos.re_new_password === '') {
-            console.log("erro1")
             toast.error('Preencha todos os campos!');
             return false;
         }
         if (infos.new_password !== infos.re_new_password) {
-            console.log("erro3")
             toast.error('As senhas não coincidem!');
             return false;
         }

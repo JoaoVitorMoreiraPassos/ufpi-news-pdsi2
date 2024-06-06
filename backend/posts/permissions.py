@@ -11,4 +11,4 @@ class HasPostPermissions(permissions.BasePermission):
             return True
         else:
             # Para POST, UPDATE e DELETE, o usuário precisa ter a permissão post_permissoes=True
-            return request.user.post_permissoes or request.user.is_superuser
+            return request.user.is_authenticated and (request.user.post_permissoes or request.user.is_superuser)

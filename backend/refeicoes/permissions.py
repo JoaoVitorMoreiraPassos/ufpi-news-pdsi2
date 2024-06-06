@@ -12,4 +12,4 @@ class HasRefeicaoPermissions(permissions.BasePermission):
             return True
         else:
             # Para POST, UPDATE e DELETE, o usuário precisa ter a permissão post_permissoes=True ou ser superuser
-            return request.user.refeicao_permissoes or request.user.is_superuser
+            return request.user.is_authenticated and (request.user.refeicao_permissoes or request.user.is_superuser)

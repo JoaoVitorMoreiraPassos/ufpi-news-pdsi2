@@ -20,10 +20,15 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+# from posts.urls import router
+
 urlpatterns = [
+    # path('api/v2/', include(router.urls)),
+
     path('admin/', admin.site.urls),
     path("api/v1/", include("accounts.urls")),
-    path("api/v1/", include("posts.urls")),
+    # path("api/v1/", include("posts.urls")),
+    path("api/v2/", include("posts.urls")),
     path("api/v1/", include("refeicoes.urls")),
 
     # A rota para redefinir a senha é api/v1/users/reset_password/

@@ -1,0 +1,13 @@
+select {
+    background: #4985ada9;
+    border: .5px solid #999;
+    transition: all 300ms ease-in-out;
+    border-radius: 1rem;
+    outline: none;
+    padding: 1rem
+}
+
+
+/* input[type="text"]::placeholder {
+    color: #111;
+} */

@@ -2,9 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import moment from 'moment-timezone';
+import 'moment/locale/pt-br';
 import { format } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserAlt } from '@fortawesome/free-solid-svg-icons';
+
 import UserApi from '@/app/api/user';
 import PostApi from '@/app/api/Notice';
 import Input from '../Inputs/Input';
@@ -212,9 +214,9 @@ const NoticeContent = ({ slug }: { slug: string }) => {
                 }
             </div>
             <div className='flex flex-col justify-start items-start gap-4 p-2 w-1/2 max-xl:w-full max-xl:p-4'>
-                <p className='text-x text-justify text-black'>
+                <pre className='text-x text-justify text-black w-full whitespace-pre-wrap'>
                     {description}
-                </p>
+                </pre>
             </div>
 
             <div className="flex flex-col justify-start items-start w-1/2 mt-6 mb-12 max-xl:w-full max-xl:p-1 gap-2">

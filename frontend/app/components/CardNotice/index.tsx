@@ -10,6 +10,7 @@ import { FormatOptions } from 'date-fns';
 const CardNotice = ({ data }: {
     data:
     {
+        id: number,
         imagem_post: string,
         titulo_post: string,
         conteudo_post: string,
@@ -111,13 +112,14 @@ const CardNotice = ({ data }: {
                     </p>
                 </div>
                 <div className='h-full flex items-center'>
-                    <a href={data.url}>
+                    <a href={`/noticias/${data.id}`}>
                         <button className=' transition-all duration-200 border-2 border-solid border-blue-500 text-blue-500 rounded-md px-3 hover:text-white hover:bg-blue-500'
                             style={{
                                 fontSize: "1rem",
                                 fontWeight: "300"
                             }}>
                             Mais...
+
                         </button>
                     </a>
                 </div>

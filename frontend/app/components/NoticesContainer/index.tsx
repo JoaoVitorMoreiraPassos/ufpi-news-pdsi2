@@ -46,6 +46,7 @@ const NoticesContainer = ({ title }: { title: string }) => {
     }
 
     const getNextNotices = async () => {
+        if (!next) return;
         try {
             const response = await NoticesApi.ListNextPosts(next)
             setNotices([...notices, ...response.results])

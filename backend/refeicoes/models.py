@@ -1,5 +1,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.dispatch import receiver
+
+
 
 class Base(models.Model):
     ativo = models.BooleanField(default=True, verbose_name='Ativo')
@@ -35,6 +38,7 @@ class Cardapio(Base):
     )
     tipo = models.CharField(max_length=1, choices=CARDAPIO_TYPE, default='A')
     data = models.DateField(verbose_name='Data')
+    # if a alimentos is deleted, delete the cardapio
     alimentos = models.ManyToManyField(Alimento, related_name='cardapios')
 
     def save(self, *args, **kwargs):
@@ -47,6 +51,8 @@ class Cardapio(Base):
         verbose_name = 'Cardapio'
         verbose_name_plural = 'Cardapios'
         ordering = ['data']
+        unique_together = ['data', 'tipo']
+
 
     def __str__(self):
         return str(self.data)

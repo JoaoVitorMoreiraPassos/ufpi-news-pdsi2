@@ -60,7 +60,7 @@ const RecipeItemRegister = ({ items, title, tipo }: { items: Item[], title: stri
             <div className='flex flex-col gap-2'>
                 <label htmlFor={tipo} className='text-xl'>{title}</label>
                 <Input value={newItem} setValue={setNewItem} type="text" placeholder='+ Nova Refeição' submit={() => add_item(tipo)} />
-                <button type="submit" className='bg-green-500 text-white rounded-xl p-2 w-80 h-14' onClick={
+                <button type="submit" className=' bg-green-500 text-white rounded-xl p-2 w-80 h-14' onClick={
                     () => {
                         add_item(tipo)
                     }
@@ -82,4 +82,4 @@ const RecipeItemRegister = ({ items, title, tipo }: { items: Item[], title: stri
     )
 }
 
-export default RecipeItemRegister
+export default RecipeItemRegister;

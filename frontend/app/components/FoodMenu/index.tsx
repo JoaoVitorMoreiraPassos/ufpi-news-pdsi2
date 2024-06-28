@@ -1,8 +1,14 @@
 'use client';
 import Image from "next/image";
 import React from 'react'
-
-const FoodMenu = ({ meal, data }: { meal: string, data: string[] }) => {
+type Alimento = {
+    id: number
+    nome_refeicao: string
+    tipo_refeicao: string
+    ativo: boolean
+    tipo_refeicao_nome: string
+}
+const FoodMenu = ({ meal, data }: { meal: string, data: Alimento[] }) => {
     return (
         <div className="transition-all duration-200 refeicao flex flex-row bg-white rounded-3xl min-w-72 justify-start h-full w-96"
             style={{
@@ -20,7 +26,7 @@ const FoodMenu = ({ meal, data }: { meal: string, data: string[] }) => {
                 <h1 className="text-xl font-bold text-gray-800">
                     {meal}
                 </h1>
-                <ul className=" h-full border-l-4 pl-1 border-blue-500 flex flex-col justify-between flex-wrap w-full">
+                <ul className=" h-full border-l-2 pl-1 border-blue-500 flex flex-col justify-between flex-wrap w-full">
                     {
                         data.map((item, index) => {
                             return <li
@@ -30,7 +36,7 @@ const FoodMenu = ({ meal, data }: { meal: string, data: string[] }) => {
                                     wordBreak: "break-word",
                                 }}
                                 key={index}>
-                                {item}
+                                {item?.nome_refeicao}
                             </li>
                         })
                     }

@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from PIL import Image
 
 class Base(models.Model):
     ativo = models.BooleanField(default=True, verbose_name='Ativo')
@@ -36,6 +37,8 @@ class Cardapio(Base):
     tipo = models.CharField(max_length=1, choices=CARDAPIO_TYPE, default='A')
     data = models.DateField(verbose_name='Data')
     alimentos = models.ManyToManyField(Alimento, related_name='cardapios')
+    imagem = models.ImageField(upload_to='cardapio_img/%Y/%m/%d',
+                               blank=True, null=True, verbose_name='Imagem')
 
     def save(self, *args, **kwargs):
         if not self.pk and Cardapio.objects.filter(data=self.data).count() >= 2:
@@ -51,4 +54,15 @@ class Cardapio(Base):
 
     def __str__(self):
         return str(self.data)
+    
+    # Redimensionar imagem do cardápio
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.imagem:
+            img = Image.open(self.imagem.path)
+            if img.height > 200 or img.width > 200:
+                output_size = (300, 300)
+                img.thumbnail(output_size)
+                img.save(self.imagem.path)
 

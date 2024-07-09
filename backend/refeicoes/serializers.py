@@ -38,4 +38,5 @@ class CardapioSerializer(serializers.ModelSerializer):
             'data',
             'alimentos',
             'ativo',
+            'imagem',
         )

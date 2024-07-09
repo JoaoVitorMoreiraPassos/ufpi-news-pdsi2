@@ -4,7 +4,7 @@ from .views import (
     CadastrarAPIView,
     UserDetailAPIView,
     SearchUserAPIView,
-    # UserUpdateAPIView,
+    UserUpdateAPIView,
     # SearchUsersAPIView
 )
 
@@ -14,4 +14,6 @@ urlpatterns = [
     path(
         "user-detail/<str:username>/", SearchUserAPIView.as_view(), name="user-detail"
     ),
+    path("user-update/", UserUpdateAPIView.as_view(), name="user-update"),
 ]
+

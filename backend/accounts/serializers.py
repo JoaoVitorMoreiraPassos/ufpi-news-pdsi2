@@ -22,6 +22,14 @@ class UserSerializer(serializers.ModelSerializer):
             "password": {"write_only": True},
         }
 
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "first_name",
+            "last_name",
+            "foto_perfil",
+        ]
 
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:

@@ -8,6 +8,7 @@ from rest_framework.generics import (
 from .serializers import (
     UserSerializer,
     UserDetailSerializer,
+    UserUpdateSerializer
 )
 
 from rest_framework.permissions import (
@@ -40,6 +41,20 @@ class CadastrarAPIView(CreateAPIView):
             {"message": "Erro ao cadastrar usuário!", "errors": serializer.errors},
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+class UserUpdateAPIView(UpdateAPIView):
+    serializer_class = UserUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+    
+    def update(self, request, *args, **kwargs): # Isso faz 
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
 
 class UserDetailAPIView(RetrieveAPIView):

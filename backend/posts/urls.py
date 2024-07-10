@@ -7,12 +7,17 @@ from .views import (
     PostAPIView,
     SearchPostByAutorAPIView,
     ComentariosAPIView,
-    ComentarioAPIView
+    ComentarioAPIView,
+    AddFavoritoAPIView,
+    DeleteFavoritoAPIView,
+    FavoritosAPIView,
+    # FavoritoViewSet,
 )
 
 
 router = DefaultRouter()
 router.register(r'posts', PostsViewSet)
+# router.register(r'favoritos', FavoritoViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -37,5 +42,9 @@ urlpatterns = [
     path("posts/<int:post_pk>/comentarios/", ComentariosAPIView.as_view(), name="comentarios"),
     path("posts/<int:post_pk>/comentarios/<int:pk>/", ComentarioAPIView.as_view(), name="comentario"),
 
+    path("favoritos/<int:post_id>/", AddFavoritoAPIView.as_view(), name="favorito"),
+    path("favoritos/delete/<int:post_id>/",
+         DeleteFavoritoAPIView.as_view(), name="delete_favorito"),
+    path("favoritos/", FavoritosAPIView.as_view(), name="favoritos"),
 
 ]

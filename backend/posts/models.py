@@ -68,6 +68,3 @@ class Favorito(Base):
         # impede que um usuario favorite um post mais de uma vez
         unique_together = ['post_favorito', 'autor_favorito']
 
-    # def __str__(self):
-    #     return f'{self.autor_favorito} favoritou {self.post_favorito}'
-

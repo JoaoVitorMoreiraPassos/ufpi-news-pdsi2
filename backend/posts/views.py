@@ -3,6 +3,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404
 
 # from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import (
@@ -150,7 +151,110 @@ class ComentariosAPIView(generics.ListCreateAPIView):
             status=status.HTTP_400_BAD_REQUEST,
         )
     
-class ComentarioAPIView(generics.RetrieveUpdateDestroyAPIView):
+class ComentarioAPIView(generics.RetrieveDestroyAPIView):
     queryset = Comentario.objects.all()
     serializer_class = ComentarioSerializer
+    permission_classes = [IsAuthenticated]
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if request.user.id == instance.autor_comentario.id:
+            self.perform_destroy(instance)
+            return Response(
+                {"message": "Comentário deletado com sucesso!"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        else:
+            return Response(
+                {"message": "O id do usuário não corresponde ao autor do comentário."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+class AddFavoritoAPIView(generics.CreateAPIView):
+    queryset = Favorito.objects.all()
+    serializer_class = FavoritoSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        post_id = self.kwargs.get("post_id")
+        post = get_object_or_404(Post, id=post_id)
+        user = get_user_model().objects.get(username=request.user)
+        favorito, created = Favorito.objects.get_or_create(post_favorito=post, autor_favorito=user)
+        if created:
+            return Response(
+                {
+                    "message": "Post adicionado aos favoritos com sucesso!",
+                    "favorito": request.data,
+                },
+                status=status.HTTP_201_CREATED
+            )
+        else:
+            return Response({"message": "Post já estava nos favoritos."}, status=status.HTTP_200_OK)
+
+
+class DeleteFavoritoAPIView(generics.DestroyAPIView):
+    queryset = Favorito.objects.all()
+    serializer_class = FavoritoSerializer
+    permission_classes = [IsAuthenticated]
+
+    def destroy(self, request, *args, **kwargs):
+        post_id = self.kwargs.get("post_id")
+        post = get_object_or_404(Post, id=post_id)
+        user = get_user_model().objects.get(username=request.user)
+        favorito = Favorito.objects.get(post_favorito=post, autor_favorito=user)
+        favorito.delete()
+        return Response({"message": "Post removido dos favoritos."}, status=status.HTTP_200_OK)
+
+class FavoritosAPIView(generics.ListAPIView):
+    queryset = Favorito.objects.all()
+    serializer_class = FavoritoSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(autor_favorito=self.request.user)
+
+# API version 2
+# class FavoritoViewSet(viewsets.ModelViewSet):
+#     queryset = Favorito.objects.all()
+#     serializer_class = FavoritoSerializer
+#     permission_classes = [IsAuthenticated, ]
+
+#     def create(self, request, *args, **kwargs):
+#         serializer: FavoritoSerializer = self.get_serializer(data=request.data)
+#         if serializer.is_valid():
+#             # Verificar se o id passado é igual ao do usuário logado
+#             if request.user.id == serializer.validated_data.get("autor_favorito").id:
+#                 serializer.save()
+#                 headers = self.get_success_headers(serializer.data)
+#                 return Response(
+#                     {
+#                         "message": "Favorito cadastrado com sucesso!",
+#                         "favorito": serializer.data,
+#                     },
+#                     status=status.HTTP_201_CREATED,
+#                     headers=headers,
+#                 )
+#             else:
+#                 return Response(
+#                     {"message": "O id do usuário não corresponde ao autor do favorito."},
+#                     status=status.HTTP_400_BAD_REQUEST,
+#                 )
+#         return Response(
+#             {"message": "Erro ao cadastrar favorito!", "errors": serializer.errors},
+#             status=status.HTTP_400_BAD_REQUEST,
+#         )
+
+#     def destroy(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         if request.user.id == instance.autor_favorito.id:
+#             self.perform_destroy(instance)
+#             return Response(
+#                 {"message": "Favorito deletado com sucesso!"},
+#                 status=status.HTTP_204_NO_CONTENT,
+#             )
+#         else:
+#             return Response(
+#                 {"message": "O id do usuário não corresponde ao autor do favorito."},
+#                 status=status.HTTP_400_BAD_REQUEST,
+#             )
 

@@ -17,32 +17,40 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
     });
 
     const [isLogged, setIsLogged] = React.useState(false)
+    const [slideShow, setSlideShow] = React.useState(false);
     const [slidePosition, setSlidePosition] = React.useState('first');
     const [userOptions, setUserOptions] = React.useState(false);
     const logout = () => {
-        localStorage.removeItem('acessToken');
+        localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('user');
+        setUser({
+            name: '',
+            email: '',
+            avatar: '',
+            permissions: [false, false]
+        });
         window.location.pathname = '/';
+
     }
     React.useEffect(() => {
         const verify = async () => {
             try {
-                const response = await UserApi.verifyToken(localStorage.getItem('acessToken') ?? '');
+                const response = await UserApi.verifyToken(localStorage.getItem('accessToken') ?? '');
+
+                const user = await UserApi.getUser(localStorage.getItem('accessToken') ?? '');
+
+                setUser({
+                    name: user.username,
+                    email: user.email,
+                    avatar: user.foto_perfil,
+                    permissions: user.permissions
+                })
+
                 return response;
             } catch (error) {
                 return false;
             }
-        }
-        const path = window.location.pathname;
-        if (path === '/') {
-            setSlidePosition('first');
-        }
-        if (path === '/sobre') {
-            setSlidePosition('second');
-        }
-        if (path === '/contato') {
-            setSlidePosition('third');
         }
 
         const userInfos = localStorage.getItem('user');
@@ -54,9 +62,15 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
                 if (response) {
                     setIsLogged(true);
                 } else {
-                    localStorage.removeItem('acessToken');
+                    localStorage.removeItem('accessToken');
                     localStorage.removeItem('refreshToken');
                     localStorage.removeItem('user');
+                    setUser({
+                        name: '',
+                        email: '',
+                        avatar: '',
+                        permissions: [false, false]
+                    });
                     setIsLogged(false);
                 }
             })
@@ -70,34 +84,12 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
             }
         })
     }, [])
-    React.useEffect(() => {
-        const links: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('header nav ul li a');
 
-        switch (slidePosition) {
-            case 'first':
-                links[0]?.classList.add('text-blue-500');
-                links[1]?.classList.remove('text-blue-500');
-                links[2]?.classList.remove('text-blue-500');
-                break;
-            case 'second':
-                links[1]?.classList.add('text-blue-500');
-                links[0]?.classList.remove('text-blue-500');
-                links[2]?.classList.remove('text-blue-500');
-
-                break;
-            case 'third':
-                links[2]?.classList.add('text-blue-500');
-                links[0]?.classList.remove('text-blue-500');
-                links[1]?.classList.remove('text-blue-500');
-
-                break;
-            default:
-                break;
-        }
-
-    }, [slidePosition])
 
     const moveSlideToOrigin = () => {
+        if (!slideShow) {
+            return;
+        }
         const path = window.location.pathname;
         const links: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('header nav ul li a');
         if (path === '/') {
@@ -117,7 +109,7 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
     }
 
     return (
-        <header className=' flex flex-row items-center w-full fixed z-50'>
+        <header className=' flex flex-row items-center  w-full fixed z-30'>
             <div className='hamburguer flex flex-col items-center justify-center cursor-pointer absolute top-1/2 transform -translate-y-1/2 transition-all duration-300 ease-in-out'
                 onClick={() => {
                     setSideBarController(!SideBarController)
@@ -148,21 +140,6 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
             </a>
             <nav className='text-white relative'>
                 <ul className='flex flex-row transition-all duration-300'>
-                    <li
-                        onMouseMove={() => setSlidePosition("first")}
-                        onMouseLeave={() => moveSlideToOrigin()}
-                    ><a className='transition-all duration-300 ease-in-out'
-                        href="/">Home</a></li>
-                    <li
-                        onMouseMove={() => setSlidePosition("second")}
-                        onMouseLeave={() => moveSlideToOrigin()}
-                    ><a className='transition-all duration-300 ease-in-out'
-                        href="/sobre">Sobre</a></li>
-                    <li
-                        onMouseMove={() => setSlidePosition("third")}
-                        onMouseLeave={() => moveSlideToOrigin()}
-                    ><a className='transition-all duration-300 ease-in-out'
-                        href="/contato">Contato</a></li>
                     <li className=' cursor-pointer'>
                         <div className='bdr h-1/2'></div>
                         <div className='gap-3 flex items-center ml-5 w-6 h-6 relative '
@@ -171,8 +148,17 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
                             }>
                             {
                                 user.avatar ? (
-                                    <Image src={user.avatar} alt="Usuário" width={20} height={20}
-                                        className="rounded-full w-full h-full openOptions"
+                                    <Image src={user.avatar} alt="Usuário" width={100} height={100}
+                                        style={{
+                                            color: '#fff',
+                                            background: '#D2D2D2',
+                                            borderRadius: '50%',
+                                            width: '40px',
+                                            height: '40px',
+                                            maxWidth: '50px',
+                                            // padding: '7px'
+                                        }}
+                                        className="openOptions"
                                         onClick={
                                             () => setUserOptions(!userOptions)
                                         }
@@ -182,8 +168,11 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
                                         color: '#fff',
                                         background: '#D2D2D2',
                                         borderRadius: '50%',
-                                        padding: '7px'
-                                    }} className='h-full w-full openOptions'
+                                        padding: '10px',
+                                        width: '20px',
+                                        height: '20px',
+                                        fontSize: '1rem'
+                                    }} className=' openOptions'
                                         onClick={
                                             () => setUserOptions(!userOptions)
                                         } />
@@ -195,7 +184,7 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
                                     () => setUserOptions(!userOptions)
                                 }
                             >{
-                                    user.name ? user.name : ''
+                                    user.name ? user.name.substring(0, 10) : ''
                                 }</span>
                             <div className={"flex justify-center w-36 userOptions absolute  bg-white rounded-3xl py-4 shadow-lg transition-all duration-400 ease-in-out " +
                                 (userOptions ? "block + top-16" : " -top-36") + " z-10"
@@ -245,14 +234,7 @@ const Header = ({ SideBarController, setSideBarController }: { SideBarController
                         </div>
                     </li>
                 </ul>
-                <div className={'slideBar w-1/5 bg-blue-500 h-2 absolute bottom-0 ' + slidePosition + ' transition-all duration-300 ease-in-out'}
-                    style={
-                        {
-                            borderRadius: '0px 5px 0px 5px'
-                        }
-                    }
-                >
-                </div>
+
             </nav >
 
         </header >

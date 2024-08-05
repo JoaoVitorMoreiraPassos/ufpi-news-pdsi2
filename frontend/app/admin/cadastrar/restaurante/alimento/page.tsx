@@ -2,11 +2,8 @@
 import SideBar from '@/app/components/SideBar';
 import '@/app/globals.css';
 import Header from '@/app/components/Header';
-import { metadata } from '@/app/layout';
 import Footer from '@/app/components/Footer';
-import RecipeDelete from '@/app/components/RecipeDelete';
 import RecipeItemRegister from '@/app/components/RecipeItemRegister';
-import axios from 'axios';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import RUAPI from '@/app/api/Recipe';
@@ -21,6 +18,10 @@ interface Item {
 
 
 export default function CadastrarCardapio() {
+
+    useEffect(() => {
+        document.title = 'Cadastrar Alimentos';
+    }, [])
 
     const [Items, setItems] = useState<Item[]>([]);
     const [sideBarControl, setSideBarControl] = React.useState(false);
@@ -41,7 +42,7 @@ export default function CadastrarCardapio() {
         if (!loggedUser) {
             window.location.href = '/auth/login';
         }
-        const token = localStorage.getItem('acessToken') ?? '';
+        const token = localStorage.getItem('accessToken') ?? '';
         const verifyToken = async (token: string) => {
             try {
                 const response = await UserAPI.verifyToken(token);

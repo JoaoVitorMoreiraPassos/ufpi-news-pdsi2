@@ -1,7 +1,7 @@
 'use client';
+import './style.css'
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './style.css'
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const Carousel = ({ children }: { children: React.ReactNode }) => {
@@ -31,7 +31,7 @@ const Carousel = ({ children }: { children: React.ReactNode }) => {
         } else {
             setRightButton(true);
         }
-    }, [scrollPostion])
+    }, [scrollPostion, children])
 
     const handleLeft = () => {
         if (!leftButton) {

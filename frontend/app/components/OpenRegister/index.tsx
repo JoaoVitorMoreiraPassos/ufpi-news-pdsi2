@@ -21,7 +21,7 @@ export const OpenRegister = () => {
         });
         let getUser = async () => {
             try {
-                const token = localStorage.getItem('acessToken') ?? "";
+                const token = localStorage.getItem('accessToken') ?? "";
                 if (!token) {
                     return;
                 }

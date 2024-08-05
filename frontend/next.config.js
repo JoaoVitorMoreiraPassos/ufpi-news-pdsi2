@@ -1,6 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
+// const host = "http://192.168.1.12:8000/";
+const host = "http://10.180.42.72:8000/";
 module.exports = {
+    env: {
+        BASE_URL: 'http://localhost:3000',
+        API_URL: host + 'api/v1/',
+        API_URLv2: host + 'api/v2/',
+        API_VERSION: 'v1',
+        API_KEY: '1234567890'
+    },
     reactStrictMode: true,
     images: {
         remotePatterns: [
@@ -11,6 +20,14 @@ module.exports = {
             {
                 protocol: 'http',
                 hostname: 'localhost'
+            },
+            {
+                protocol: 'http',
+                hostname: '192.168.1.12'
+            },
+            {
+                protocol: "http",
+                hostname: "*"
             }
         ]
     }

@@ -38,8 +38,8 @@ interface Favorito {
 }
 
 class NoticeAPI {
-    url = 'http://localhost:8000/api/v1/posts/';
-    favorite_url = 'http://localhost:8000/api/v1/favoritos/';
+    url = process.env.API_URLv2 + 'posts/';
+    favorite_url = process.env.API_URLv2 + 'favoritos/';
 
     async ListPost() {
         const response = await axios.get(this.url)
@@ -56,7 +56,6 @@ class NoticeAPI {
     }
 
     async CreatePost(token: string, data: { imagem_post: File, titulo_post: string, conteudo_post: string }) {
-        console.log(data)
         const response = await axios.post(this.url,
             data
             ,
@@ -107,6 +106,22 @@ class NoticeAPI {
         }
     }
 
+    async DeleteComment(token: string, data: { post_comentario: number, id: number }) {
+        try {
+            const response = await axios.delete(
+                this.url + data.post_comentario + "/comentarios/" + data.id + "/",
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    }
+                }
+            );
+            return response.data
+        } catch (error) {
+            throw error
+        }
+    }
 
     async ListFavoritePosts(token: string) {
         try {

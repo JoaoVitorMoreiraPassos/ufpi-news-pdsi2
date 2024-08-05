@@ -6,10 +6,12 @@ import React from "react";
 import FoodMenu from "./components/FoodMenu";
 import NoticesContainer from "./components/NoticesContainer";
 import RUAPI from "@/app/api/Recipe";
+import NoticeAPI from "@/app/api/Notice";
 import Input from "./components/Inputs/Input";
 import { CircularProgress } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { format } from "date-fns";
 
 type Menu = {
   alimentos: number[]
@@ -30,14 +32,41 @@ type Alimento = {
 export default function Home() {
 
   const [sideBarControl, setSideBarControl] = React.useState(false);
-  const [date, setDate] = React.useState(new Date().toISOString().split('T')[0]);
+  const brazilianTimeZone = 'America/Sao_Paulo';
+
+  const currentDateTimeInBrazil = format(new Date(), 'yyyy-MM-dd', {
+    timeZone: brazilianTimeZone,
+  } as any
+  );
+  const [date, setDate] = React.useState<string>(currentDateTimeInBrazil);
   const [menu, setMenu] = React.useState<{ lunch: Alimento[], dinner: Alimento[] }>({ lunch: [], dinner: [] });
-  const [loading, setLoading] = React.useState(true);
+  const [loadingMenu, setLoadingMenu] = React.useState(true);
+  const [notices, setNotices] = React.useState<any[]>([]);
+  const [next, setNext] = React.useState('');
+  const [loadingNotices, setLoadingNotices] = React.useState(true);
 
   React.useEffect(() => {
+    document.title = "Página Inicial";
+  }, []);
+
+  React.useEffect(() => {
+    const getNotices = async () => {
+      setLoadingNotices(true);
+      try {
+        const response = await NoticeAPI.ListPost();
+        setNotices(response.results);
+        setNext(response.next);
+        setLoadingNotices(false);
+      }
+      catch (error) {
+        setLoadingNotices(false);
+        console.error(error);
+      }
+      setLoadingNotices(false);
+    }
     const getRecipes = async () => {
       try {
-        setLoading(true);
+        setLoadingMenu(true);
         const response = await RUAPI.getCardapio();
         const almoco = response.filter((item: any) => item.tipo === "A" && item.data === date)[0];
         const jantar = response.filter((item: any) => item.tipo === "J" && item.data === date)[0];
@@ -49,6 +78,7 @@ export default function Home() {
             const alimento = await RUAPI.getAlimento(almoco.alimentos[i]);
             almoco_alimentos.push(alimento);
           }
+
         }
         let jantar_alimentos = [];
         if (jantar) {
@@ -58,15 +88,16 @@ export default function Home() {
           }
         }
         setMenu({ lunch: almoco_alimentos, dinner: jantar_alimentos });
-        setLoading(false);
+        setLoadingMenu(false);
       } catch (error) {
         console.error(error);
-        setLoading(false);
+        setLoadingMenu(false);
       }
     };
-
-    getRecipes();
-
+    if (date) {
+      getRecipes();
+    }
+    getNotices();
   }, [date]);
 
   return (
@@ -78,7 +109,7 @@ export default function Home() {
         <main className="flex min-h-screen max-sm:px-0">
 
           <section className="w-full min-[sm]:px-8 pt-10 pb-4 flex flex-col flex-wrap gap-8 justify-center items-center">
-            <div className="flex flex-row items-center gap-2 justify-self-start w-full">
+            <div className="flex flex-row items-center gap-2 justify-self-start w-full pl-4">
               <FontAwesomeIcon className="w-4 h-4" icon={faPlay} style={{
                 color: "#4C84F2",
               }} />
@@ -89,24 +120,23 @@ export default function Home() {
             </div>
             <div className="flex flex-row gap-8 items-center flex-wrap justify-center">
               {
-                loading ? <CircularProgress /> :
+                loadingMenu ? <CircularProgress /> :
                   <>
                     {
                       menu.lunch.length > 0 ? (
                         <FoodMenu meal="Almoço" data={menu.lunch} />
 
                       ) : (
-                        <h1>Nenhum almoco cadastrado para essa data.</h1>
+                        <h1 className="bg-white p-4 rounded-md">Nenhum almoço cadastrado para essa data.</h1>
                       )
                     }
                     {
                       menu.dinner.length > 0 ? (
                         <FoodMenu meal="Jantar" data={menu.dinner} />
                       ) : (
-                        <h1>Nenhum jantar cadastrado para essa data.</h1>
+                        <h1 className="bg-white p-4 rounded-md">Nenhum jantar cadastrado para essa data.</h1>
                       )
                     }
-
                   </>
               }
 
@@ -119,7 +149,7 @@ export default function Home() {
             ></div>
           </section>
           <section className="w-full">
-            <NoticesContainer title="Notícias Recentes" />
+            <NoticesContainer title="Notícias Recentes" noticesList={notices} nextNotices={next} loading={loadingNotices} />
           </section>
 
         </main >

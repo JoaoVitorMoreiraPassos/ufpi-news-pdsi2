@@ -38,6 +38,11 @@ type MyMeal = {
 }
 
 export default function CadastrarRefeicao() {
+
+    useEffect(() => {
+        document.title = 'Cadastrar Cardapios';
+    }, [])
+
     const brazilianTimeZone = 'America/Sao_Paulo';
 
     const currentDateTimeInBrazil = format(new Date(), 'yyyy-MM-dd', {
@@ -56,12 +61,12 @@ export default function CadastrarRefeicao() {
     useEffect(() => {
         const getUser = async () => {
             try {
-                const token = localStorage.getItem('acessToken') ?? "";
+                const token = localStorage.getItem('accessToken') ?? "";
                 const response = await UserAPI.getUser(token);
                 if (!response) { window.location.href = '/'; return };
                 if (!response?.refeicao_permissoes) window.location.href = '/perfil';
+                setValidUser(true);
             } catch (error: any) {
-                console.log(error.toString());
                 if (error.toString() === "Error: Token not found") {
                     window.location.href = '/autenticacao/login';
                     return;
@@ -80,7 +85,7 @@ export default function CadastrarRefeicao() {
         if (!loggedUser) {
             window.location.href = '/auth/login';
         }
-        const token = localStorage.getItem('acessToken') ?? '';
+        const token = localStorage.getItem('accessToken') ?? '';
         const verifyToken = async (token: string) => {
             try {
                 const response = await UserAPI.verifyToken(token);
@@ -127,8 +132,7 @@ export default function CadastrarRefeicao() {
 
     useEffect(() => {
         const getMenu = async () => {
-            const token = localStorage.getItem('acessToken') ?? '';
-            console.log("O culpado é ele")
+            const token = localStorage.getItem('accessToken') ?? '';
             if (alimentos.regular.length === 0 && alimentos.vegan.length === 0 && alimentos.follow.length === 0) {
                 console.log("alimentos vazio")
                 return;
@@ -148,17 +152,13 @@ export default function CadastrarRefeicao() {
                     console.log("response vazio")
                     return;
                 }
-                console.log("response")
-                console.log(response)
+
                 // add checked field on regularRecipes, vegRecipes and followUps if the id is in response
 
                 const temp_almoco: Meal = response.filter((item: any) => item.tipo === 'A' && item.data === date)[0];
                 const temp_jantar: Meal = response.filter((item: any) => item.tipo === 'J' && item.data === date)[0];
 
-                console.log("temp_almoco")
-                console.log(temp_almoco)
-                console.log("temp_jantar")
-                console.log(temp_jantar)
+
 
                 let almoco_aux: MyMeal = { regular: [], vegan: [], follow: [] };
                 let jantar_aux: MyMeal = { regular: [], vegan: [], follow: [] };
@@ -192,30 +192,36 @@ export default function CadastrarRefeicao() {
 
     return (
         <div className='my-container'>
-            <div className="relative w-full" >
-                <SideBar controller={sideBarControl} setController={setSideBarControl} />
-                <Header SideBarController={sideBarControl} setSideBarController={setSideBarControl} />
-                <main className='flex flex-col items-center gap-10 pb-20'>
-                    <div className='w-48'>
-                        <Input id="menu-date" type='date' placeholder='' value={date} setValue={setDate} />
-                    </div>
-                    {
-                        alimentos.regular.length === 0 && alimentos.vegan.length === 0 && alimentos.follow.length === 0 ?
-                            (
-                                loading ? <CircularProgress /> : <h1>Nenhum alimento encontrado</h1>
-                            )
-                            :
-                            (
-                                <div className='w-full flex flex-wrap justify-center gap-10'>
-                                    <MenuRegister title='Almoço' type="A" date={date} meal={alimentos} selecteds={almoco} />
+            {
+                validUser &&
 
-                                    <MenuRegister title='Jantar' type="J" date={date} meal={alimentos} selecteds={jantar} />
-                                </div>
-                            )
-                    }
-                </main>
-            </div>
-            <Footer />
+                <div className='my-container'>
+                    <div className="relative w-full" >
+                        <SideBar controller={sideBarControl} setController={setSideBarControl} />
+                        <Header SideBarController={sideBarControl} setSideBarController={setSideBarControl} />
+                        <main className='flex flex-col items-center gap-10 pb-20'>
+                            <div className='w-48'>
+                                <Input id="menu-date" type='date' placeholder='' value={date} setValue={setDate} />
+                            </div>
+                            {
+                                alimentos.regular.length === 0 && alimentos.vegan.length === 0 && alimentos.follow.length === 0 ?
+                                    (
+                                        loading ? <CircularProgress /> : <h1>Nenhum alimento encontrado</h1>
+                                    )
+                                    :
+                                    (
+                                        <div className='w-full flex flex-wrap justify-center gap-10'>
+                                            <MenuRegister title='Almoço' type="A" date={date} meal={alimentos} selecteds={almoco} />
+
+                                            <MenuRegister title='Jantar' type="J" date={date} meal={alimentos} selecteds={jantar} />
+                                        </div>
+                                    )
+                            }
+                        </main>
+                    </div>
+                    <Footer />
+                </div>
+            }
         </div>
     )
 }

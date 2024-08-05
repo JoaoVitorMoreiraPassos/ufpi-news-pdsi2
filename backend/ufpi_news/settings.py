@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 from datetime import timedelta
 from django.conf import settings
@@ -26,6 +26,15 @@ SECRET_KEY = "django-insecure-7#cl4b83*%o*6iq@ar6aen3u%1o9)0r_r42#d(dd1h$n0=0$)v
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+if DEBUG:
+    try:
+        SIGAA_KEY = os.getenv("sigaaKey")
+        print("SIGAA_KEY", SIGAA_KEY, type(SIGAA_KEY))
+    except:
+        raise Exception("You must set the SIGAA_KEY environment variable!")    
+else:
+    SIGAA_KEY = ""
 
 ALLOWED_HOSTS = ["*"]
 
@@ -49,6 +58,7 @@ INSTALLED_APPS = [
     "accounts",
     "posts",
     "refeicoes",
+    "sigaa",
 ]
 
 MIDDLEWARE = [
@@ -87,9 +97,17 @@ WSGI_APPLICATION = "ufpi_news.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # },
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ufpinews',
+        'USER': 'ufpiuser',
+        'PASSWORD': 'password',
+        'HOST': '127.0.0.1',   # Ou o endereço IP do seu servidor MySQL
+        'PORT': '3306',        # A porta padrão do MySQL é 3306
     }
 }
 
@@ -159,7 +177,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "BLACKLIST_AFTER_ROTATION": False,
     "SIGNING_KEY": settings.SECRET_KEY,

@@ -50,11 +50,25 @@ app.post('/api/subjects', async (req, res) => {
  * @returns {Array} Array de objetos contendo as disciplinas.
  */
 async function getSubjects(user, password) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
 
     await login(page, user, password);
 
+    if (page.url !== 'https://sigaa.ufpi.br/sigaa/verPortalDiscente.do') {
+        const goMainButtonHref = "/sigaa/verPortalDiscente.do";
+        try {
+            await Promise.all([
+                page.waitForNavigation(),
+                page.click(`a[href="${goMainButtonHref}"]`)
+            ]);
+        } catch {
+            return {
+                data: []
+            }
+        }
+
+    }
     const linksObj = await page.evaluate(() => {
         const linksArray = Array.from(document.querySelectorAll('a'));
         return linksArray.map(link => {
@@ -105,10 +119,25 @@ app.post('/api/tasks', async (req, res) => {
  * @returns {Array} Array de objetos contendo as tarefas.
  */
 async function getTasks(user, password, accessId) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
 
     await login(page, user, password);
+
+    if (page.url !== 'https://sigaa.ufpi.br/sigaa/verPortalDiscente.do') {
+        const goMainButtonHref = "/sigaa/verPortalDiscente.do";
+        try {
+            await Promise.all([
+                page.waitForNavigation(),
+                page.click(`a[href="${goMainButtonHref}"]`)
+            ]);
+        } catch {
+            return {
+                error: "Erro ao buscar tarefas",
+                data: []
+            }
+        }
+    }
 
     try {
         await Promise.all([
@@ -118,6 +147,7 @@ async function getTasks(user, password, accessId) {
     } catch (e) {
         // Se houver um erro ao clicar no link da disciplina, retorna um objeto vazio
         return {
+            error: "Erro ao buscar tarefas",
             tasks: []
         }
     }
@@ -134,6 +164,7 @@ async function getTasks(user, password, accessId) {
         }
     } catch (e) {
         return {
+            error: "Erro ao buscar tarefas",
             tasks: []
         }
     }
@@ -148,6 +179,7 @@ async function getTasks(user, password, accessId) {
 
     } catch (e) {
         return {
+            error: "Erro ao buscar tarefas",
             tasks: []
         }
     }

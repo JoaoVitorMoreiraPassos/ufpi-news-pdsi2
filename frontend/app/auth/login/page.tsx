@@ -8,11 +8,14 @@ import UserApi from "@/app/api/user";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Title from "@/app/components/Title";
+import { useEffect } from "react";
 
 const fredoka = Fredoka({ subsets: ["latin"] });
 
 export default function Login() {
-
+    useEffect(() => {
+        document.title = 'Login';
+    }, [])
     const [infos, setInfos] = React.useState({
         username: '',
         password: '',
@@ -26,9 +29,9 @@ export default function Login() {
         return true;
     }
     const saveInfos = async () => {
-        const acessToken = localStorage.getItem('acessToken') ?? '';
+        const accessToken = localStorage.getItem('accessToken') ?? '';
         try {
-            const response = await UserApi.getUser(acessToken);
+            const response = await UserApi.getUser(accessToken);
             const infos = {
                 name: response.username,
                 email: response.email,
@@ -38,7 +41,7 @@ export default function Login() {
             }
             localStorage.setItem('user', JSON.stringify(infos));
         } catch (error) {
-            localStorage.removeItem('acessToken');
+            localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
             localStorage.removeItem('user');
             window.location.pathname = '/auth/login';
@@ -48,7 +51,7 @@ export default function Login() {
         if (validate()) {
             try {
                 const response = await UserApi.login(infos);
-                localStorage.setItem('acessToken', response.access);
+                localStorage.setItem('accessToken', response.access);
                 localStorage.setItem('refreshToken', response.refresh);
                 await saveInfos();
                 toast.success('Login efetuado com sucesso!');

@@ -6,10 +6,15 @@ import UserAPI from "../../../api/user";
 import React from "react";
 import Input from "@/app/components/Inputs/Input";
 import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
 import './style.css';
 import NoticesAPI from "../../../api/Notice";
 
 export default function Home() {
+    React.useEffect(() => {
+        document.title = "Cadastrar Notícia";
+    }, []);
 
     const [sideBarControl, setSideBarControl] = React.useState(false);
     const [validUser, setValidUser] = React.useState(false);
@@ -40,7 +45,7 @@ export default function Home() {
             return;
         }
         try {
-            const token = localStorage.getItem('acessToken') ?? '';
+            const token = localStorage.getItem('accessToken') ?? '';
             const response = await NoticesAPI.CreatePost(token, postInfos);
             if (response) {
                 toast.success('Postagem criada com sucesso');
@@ -56,11 +61,10 @@ export default function Home() {
         if (!loggedUser) {
             window.location.href = '/auth/login';
         }
-        const token = localStorage.getItem('acessToken') ?? '';
+        const token = localStorage.getItem('accessToken') ?? '';
         const verifyToken = async (token: string) => {
             try {
                 const response = await UserAPI.verifyToken(token);
-                console.log(response)
                 if (!response) {
                     window.location.href = '/auth/login';
                 }
@@ -74,7 +78,6 @@ export default function Home() {
         const verifyUser = async (token: string) => {
             try {
                 const response = await UserAPI.getUser(token);
-                console.log(response)
                 if (!response) {
                     window.location.href = '/auth/login';
                 }

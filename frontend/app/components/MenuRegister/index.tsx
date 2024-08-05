@@ -29,8 +29,7 @@ type Meal = {
 }
 
 export const MenuRegister = ({ title, type, date, meal, selecteds }: { title: string, type: string, date: string, meal: Meal, selecteds: Meal }) => {
-    console.log("selecteds: ")
-    console.log(selecteds)
+
     const [regularRecipe, setRegularRecipe] = useState("")
     const [veganRecipe, setVeganRecipe] = useState("")
     const [followRecipe, setFollowRecipe] = useState<Item[]>([])
@@ -101,7 +100,7 @@ export const MenuRegister = ({ title, type, date, meal, selecteds }: { title: st
         if (!verifyMenu()) {
             return;
         }
-        const token = localStorage.getItem('acessToken') || "";
+        const token = localStorage.getItem('accessToken') || "";
         // action = true -> update
         // action = false -> create
         setIsSending(true)
@@ -136,7 +135,7 @@ export const MenuRegister = ({ title, type, date, meal, selecteds }: { title: st
                         })
                     }
                     onChange={(e) => {
-                        console.log("esse é o e: " + e)
+
                         setRegularRecipe(e)
                     }} />
                 <Select id={`${title.toLowerCase()}-vegan`} value={veganRecipe}
@@ -145,7 +144,7 @@ export const MenuRegister = ({ title, type, date, meal, selecteds }: { title: st
                         return { value: item.id.toString(), label: item.nome_refeicao, checked: item.checked }
                     })}
                     onChange={(e) => {
-                        console.log("esse é o e: " + e)
+
                         setVeganRecipe(e)
                     }} />
             </div>

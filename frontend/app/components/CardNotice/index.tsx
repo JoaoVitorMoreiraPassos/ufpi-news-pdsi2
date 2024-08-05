@@ -1,13 +1,14 @@
 import React from 'react'
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faComment, faMessage } from '@fortawesome/free-solid-svg-icons'
+import { faComment, faHeart, faMessage } from '@fortawesome/free-solid-svg-icons'
 import 'moment/locale/pt-br'
 import moment from 'moment-timezone'
 import { format } from 'date-fns'
 import { FormatOptions } from 'date-fns';
+import NoticeAPI from '../../api/Notice';
 
-const CardNotice = ({ data }: {
+const CardNotice = ({ data, favorite }: {
     data:
     {
         id: number,
@@ -18,10 +19,12 @@ const CardNotice = ({ data }: {
         criacao: string,
         atualizacao: string,
         ativo: boolean,
-    }
+        autor_post_nome: string
+    }, favorite: boolean
 }) => {
     const [timePassed, setTimePassed] = React.useState<string>('');
-
+    const [isFavorite, setIsFavorite] = React.useState<boolean>(favorite);
+    const [text, setText] = React.useState<string>(favorite ? 'text-red-500' : 'text-gray-500');
     React.useEffect(() => {
         const brazilianTimeZone = 'America/Sao_Paulo';
         const currentDate = moment(format(new Date(), 'yyyy-MM-dd HH:mm:ss', {
@@ -36,6 +39,14 @@ const CardNotice = ({ data }: {
 
         setTimePassed(formattedTimePassed);
     }, [data]);
+
+    React.useEffect(() => {
+        if (isFavorite) {
+            setText('text-red-500');
+        } else {
+            setText('text-gray-500');
+        }
+    }, [isFavorite]);
 
     return (
         <div className=' card flex flex-col gap-4 justify-between items-center min-w-72 w-72 h-full bg-white'
@@ -85,7 +96,7 @@ const CardNotice = ({ data }: {
                         fontSize: "0.85rem",
                         textAlign: "justify",
                     }}>
-                    {data.conteudo_post.substring(0, 125) + "..."}
+                    {data.conteudo_post.substring(0, 130) + "..."}
                 </p>
             </div>
             <div
@@ -100,15 +111,56 @@ const CardNotice = ({ data }: {
 
                 }}>
                     <p>
-                        {timePassed}
+                        Postado há {timePassed}
                     </p>
-                    <p className='flex gap-2 items-center'>
-                        <FontAwesomeIcon icon={faMessage} className='text-gray-400 w-4 h-4'
+                    <p className='flex gap-3 items-center'>
+
+                        <FontAwesomeIcon icon={faHeart} className={text + ' w-4 h-4 cursor-pointer transition-all duration-300 ease-in-out'}
+                            onClick={async (e) => {
+                                if (isFavorite) {
+                                    try {
+                                        const token = localStorage.getItem('accessToken') ?? "";
+                                        console.log(token)
+                                        const response = await NoticeAPI.DeleteFavoritePosts(token, data.id);
+                                        if (!response) return;
+                                        if (response == null) return;
+                                        if (response == undefined) return;
+                                        setIsFavorite(false);
+                                    } catch (error: any) {
+                                        if (error.response.status === 401) {
+                                            window.location.href = '/auth/login';
+                                            return;
+                                        }
+                                    }
+                                } else {
+                                    try {
+                                        const token = localStorage.getItem('accessToken') ?? "";
+                                        console.log(token);
+                                        const response = await NoticeAPI.CreateFavoritePosts(token, data.id);
+                                        if (!response) return;
+                                        if (response == null) return;
+                                        if (response == undefined) return;
+                                        setIsFavorite(true);
+                                    } catch (error: any) {
+                                        console.log(error);
+                                        if (error.response.status === 401) {
+
+                                            window.location.href = '/auth/login';
+                                            return;
+                                        }
+
+                                    }
+                                }
+                            }}
                             style={{
                                 fontSize: "1rem",
                             }}>
                         </FontAwesomeIcon>
-                        X comentários
+                        <p className='cursor-pointer underline text-blue-500 text-sm'
+                            onClick={() => {
+                                window.location.pathname = `/perfil/${data.autor_post_nome}`
+                            }}
+                        >{data.autor_post_nome}</p>
                     </p>
                 </div>
                 <div className='h-full flex items-center'>
@@ -119,7 +171,6 @@ const CardNotice = ({ data }: {
                                 fontWeight: "300"
                             }}>
                             Mais...
-
                         </button>
                     </a>
                 </div>

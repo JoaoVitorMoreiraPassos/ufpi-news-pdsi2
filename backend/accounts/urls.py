@@ -5,6 +5,7 @@ from .views import (
     UserDetailAPIView,
     SearchUserAPIView,
     UserUpdateAPIView,
+    SearchUsersAPIView,
     # SearchUsersAPIView
 )
 
@@ -15,5 +16,6 @@ urlpatterns = [
         "user-detail/<str:username>/", SearchUserAPIView.as_view(), name="user-detail"
     ),
     path("user-update/", UserUpdateAPIView.as_view(), name="user-update"),
+     path("user-detail/search/<str:username>/", SearchUsersAPIView.as_view(), name="users-detail"),
 ]
 

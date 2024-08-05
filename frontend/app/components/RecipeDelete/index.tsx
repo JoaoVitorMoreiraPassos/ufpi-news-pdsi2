@@ -14,7 +14,7 @@ const RecipeDelete: React.FC<{ item: Item }> = ({ item }) => {
 
     const deleteItem = async () => {
         try {
-            const token = localStorage.getItem('acessToken') ?? "";
+            const token = localStorage.getItem('accessToken') ?? "";
             const response = await RUAPI.deleteAlimento(token, item.id);
 
             const node = document.querySelector(`#${item.tipo_refeicao}${item.id}`)

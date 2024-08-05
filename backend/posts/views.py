@@ -174,13 +174,21 @@ class AddFavoritoAPIView(generics.CreateAPIView):
     queryset = Favorito.objects.all()
     serializer_class = FavoritoSerializer
     permission_classes = [IsAuthenticated]
+    # define jwt authentication
+
 
     def create(self, request, *args, **kwargs):
+        print(request.data)
         post_id = self.kwargs.get("post_id")
+        print(post_id)
         post = get_object_or_404(Post, id=post_id)
+        print(post)
         user = get_user_model().objects.get(username=request.user)
+        print(user)
         favorito, created = Favorito.objects.get_or_create(post_favorito=post, autor_favorito=user)
+        print(favorito)
         if created:
+            print("created")
             return Response(
                 {
                     "message": "Post adicionado aos favoritos com sucesso!",
@@ -206,13 +214,14 @@ class DeleteFavoritoAPIView(generics.DestroyAPIView):
         return Response({"message": "Post removido dos favoritos."}, status=status.HTTP_200_OK)
 
 class FavoritosAPIView(generics.ListAPIView):
-    queryset = Favorito.objects.all()
-    serializer_class = FavoritoSerializer
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return self.queryset.filter(autor_favorito=self.request.user)
-
+        #  Return all favorite posts from the logged user
+        user = get_user_model().objects.get(username=self.request.user)
+        return self.queryset.filter(favoritos__autor_favorito=user)
 # API version 2
 # class FavoritoViewSet(viewsets.ModelViewSet):
 #     queryset = Favorito.objects.all()

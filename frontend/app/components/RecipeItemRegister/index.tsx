@@ -19,9 +19,9 @@ const RecipeItemRegister = ({ items, title, tipo }: { items: Item[], title: stri
 
     const add_item = async (type: string) => {
 
-        console.log(newItem, type)
+
         try {
-            const token = localStorage.getItem('acessToken') ?? "";
+            const token = localStorage.getItem('accessToken') ?? "";
             const response = await RUAPI.postAlimento(token, {
                 nome_refeicao: newItem,
                 tipo_refeicao: type,
@@ -48,7 +48,6 @@ const RecipeItemRegister = ({ items, title, tipo }: { items: Item[], title: stri
                 }
             }
         } catch (error) {
-            console.log("deu erro")
             console.log(error)
         }
 

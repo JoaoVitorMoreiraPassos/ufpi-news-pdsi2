@@ -30,12 +30,12 @@ urlpatterns = [
     # path("api/v1/", include("posts.urls")),
     path("api/v2/", include("posts.urls")),
     path("api/v1/", include("refeicoes.urls")),
+    path("api/v1/", include("sigaa.urls")),
 
     # A rota para redefinir a senha é api/v1/users/reset_password/
     # A rota para confirmar a redefinição de senha é api/v1/users/reset_password_confirm/
     path("api/v1/", include("djoser.urls")),
     path("api/v1/", include("djoser.urls.jwt")),
-
     # Rota para gerar o token é api/v1/jwt/create/
     # Rota para atualizar o token é api/v1/jwt/refresh/
     # Rota para verificar o token é api/v1/jwt/verify/ (Essa aqui nem precisa usar, mas já vem com a biblioteca)

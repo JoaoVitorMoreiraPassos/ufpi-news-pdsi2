@@ -8,12 +8,14 @@ import UserApi from "@/app/api/user";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Title from "@/app/components/Title";
-import { time } from "console";
+import { useEffect } from "react";
 
 const fredoka = Fredoka({ subsets: ["latin"] });
 
 export default function Register() {
-
+    useEffect(() => {
+        document.title = 'Cadastrar';
+    }, [])
     const [infos, setInfos] = React.useState({
         first_name: '',
         last_name: '',
@@ -24,6 +26,7 @@ export default function Register() {
 
     const validate = () => {
         if (infos.first_name === '' || infos.last_name == '' || infos.username === '' || infos.email === '' || infos.password === '') {
+            toast.error('Preencha todos os campos!');
             return false;
         }
         const email = infos.email;
@@ -64,6 +67,8 @@ export default function Register() {
             } catch (error) {
                 toast.error('Erro ao cadastrar usuário!');
             }
+        } else {
+
         }
     }
 

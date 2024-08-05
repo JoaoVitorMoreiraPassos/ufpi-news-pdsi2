@@ -19,6 +19,8 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework import status, serializers
 from django.contrib.auth import get_user_model
+from rest_framework.pagination import PageNumberPagination
+
 
 
 class CadastrarAPIView(CreateAPIView):
@@ -72,3 +74,14 @@ class SearchUserAPIView(RetrieveAPIView):
     def get_object(self):
         username = self.kwargs.get("username")
         return get_user_model().objects.get(username=username)
+
+class SearchUsersPagination(PageNumberPagination):
+    page_size = 8
+
+class SearchUsersAPIView(ListAPIView):
+    serializer_class = UserDetailSerializer
+    pagination_class = SearchUsersPagination
+
+    def get_queryset(self):
+        username = self.kwargs.get("username")
+        return get_user_model().objects.filter(username__icontains=username).order_by("id")

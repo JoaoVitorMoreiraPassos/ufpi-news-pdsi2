@@ -1,10 +1,14 @@
+const { sys } = require('typescript');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
 // const host = "http://192.168.1.12:8000/";
-const host = "http://10.180.42.72:8000/";
+// const host = "http://10.180.42.72:8000/";
+// get host from env REACT_APP_API_URL
+const host = process.env.REACT_APP_API_URL;
 module.exports = {
     env: {
-        BASE_URL: 'http://localhost:3000',
+        BASE_URL: host,
         API_URL: host + 'api/v1/',
         API_URLv2: host + 'api/v2/',
         API_VERSION: 'v1',

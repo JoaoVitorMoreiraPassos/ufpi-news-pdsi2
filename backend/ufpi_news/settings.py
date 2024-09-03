@@ -103,11 +103,14 @@ DATABASES = {
     # },
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ufpinews',
-        'USER': 'ufpiuser',
-        'PASSWORD': 'password',
-        'HOST': '127.0.0.1',   # Ou o endereço IP do seu servidor MySQL
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv('DB_HOST'),   # Ou o endereço IP do seu servidor MySQL
         'PORT': '3306',        # A porta padrão do MySQL é 3306
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",  # Evite configurações inconsistentes
+        }
     }
 }
 

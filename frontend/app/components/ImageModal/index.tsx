@@ -149,10 +149,9 @@ export const BeautifulImageDropzone = (
                                     if (previewCanvasRef.current) {
                                         previewCanvasRef.current.toBlob((blob) => {
                                             if (blob) {
-                                                const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
-                                                if (file) {
-                                                    setFile(file);
-                                                }
+                                                const file = new File([blob], 'image.jpg', { type: 'image/jpeg' }) as File ?? null;
+
+                                                if (setFile) setFile(file);
                                             }
                                         }, 'image/jpeg');
                                     }

@@ -1,3 +1,5 @@
+
+
 // Importa os módulos necessários
 const express = require('express');
 const puppeteer = require('puppeteer');
@@ -25,6 +27,20 @@ async function login(page, user, password) {
         page.click('input[type="submit"]'),
         page.waitForNavigation()
     ]);
+
+    if (page.url !== 'https://sigaa.ufpi.br/sigaa/verPortalDiscente.do') {
+        const goMainButtonHref = "/sigaa/verPortalDiscente.do";
+        try {
+            await Promise.all([
+                page.waitForNavigation(),
+                page.click(`a[href="${goMainButtonHref}"]`)
+            ]);
+        } catch {
+            return {
+                data: []
+            }
+        }
+    }
 }
 
 // Rota para obter as disciplinas
@@ -41,6 +57,7 @@ app.post('/api/subjects', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+
 });
 
 /**
@@ -50,25 +67,13 @@ app.post('/api/subjects', async (req, res) => {
  * @returns {Array} Array de objetos contendo as disciplinas.
  */
 async function getSubjects(user, password) {
+    const start = Date.now();
     const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
 
     await login(page, user, password);
+    console.log(`Login time: ${Date.now() - start} ms`);
 
-    if (page.url !== 'https://sigaa.ufpi.br/sigaa/verPortalDiscente.do') {
-        const goMainButtonHref = "/sigaa/verPortalDiscente.do";
-        try {
-            await Promise.all([
-                page.waitForNavigation(),
-                page.click(`a[href="${goMainButtonHref}"]`)
-            ]);
-        } catch {
-            return {
-                data: []
-            }
-        }
-
-    }
     const linksObj = await page.evaluate(() => {
         const linksArray = Array.from(document.querySelectorAll('a'));
         return linksArray.map(link => {
@@ -90,8 +95,8 @@ async function getSubjects(user, password) {
             accessId: linksObjFiltered[i].id
         });
     }
-
     await browser.close();
+    console.log(`Total time: ${Date.now() - start} ms`);
     return responses;
 }
 
@@ -104,7 +109,9 @@ app.post('/api/tasks', async (req, res) => {
     }
 
     try {
+        const start = Date.now();
         const result = await getTasks(user, password, accessId);
+        console.log(`Total time: ${Date.now() - start} ms from ${accessId}`);
         res.json({ data: result });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -123,21 +130,6 @@ async function getTasks(user, password, accessId) {
     const page = await browser.newPage();
 
     await login(page, user, password);
-
-    if (page.url !== 'https://sigaa.ufpi.br/sigaa/verPortalDiscente.do') {
-        const goMainButtonHref = "/sigaa/verPortalDiscente.do";
-        try {
-            await Promise.all([
-                page.waitForNavigation(),
-                page.click(`a[href="${goMainButtonHref}"]`)
-            ]);
-        } catch {
-            return {
-                error: "Erro ao buscar tarefas",
-                data: []
-            }
-        }
-    }
 
     try {
         await Promise.all([
@@ -264,7 +256,7 @@ async function getTasks(user, password, accessId) {
     };
 }
 
-// Inicia o servidor na porta especificada
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });

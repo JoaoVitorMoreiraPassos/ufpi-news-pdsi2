@@ -2,6 +2,7 @@ import requests
 from typing import List, Dict
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import sys
 
 class Sigaa:
 
@@ -70,7 +71,9 @@ class Sigaa:
 if __name__ == "__main__":
     from pprint import pprint
     from time import time
-    sigaa = Sigaa("20171b0404c", "joao753951")
+    user = sys.argv[1]
+    password = sys.argv[2]
+    sigaa = Sigaa(user, password)
     t1 = time()
     sigaa.run()
     print("Time:", time() - t1, "s")

@@ -58,8 +58,13 @@ export default function Login() {
                 setTimeout(() => {
                     window.location.pathname = "/";
                 }, 1000);
-            } catch (error) {
-                toast.error('Usuário ou senha inválidos!');
+            } catch (error: any) {
+                if (error.response.status === 401) {
+                    toast.error('Usuário ou senha inválidos!');
+                }
+                else {
+                    toast.error('Ops! Ocorreu um erro ao efetuar o login!');
+                }
             }
         }
     }

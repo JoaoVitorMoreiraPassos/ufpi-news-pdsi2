@@ -60,7 +60,6 @@ export default function Home() {
       }
       catch (error) {
         setLoadingNotices(false);
-        console.error(error);
       }
       setLoadingNotices(false);
     }
@@ -90,7 +89,6 @@ export default function Home() {
         setMenu({ lunch: almoco_alimentos, dinner: jantar_alimentos });
         setLoadingMenu(false);
       } catch (error) {
-        console.error(error);
         setLoadingMenu(false);
       }
     };

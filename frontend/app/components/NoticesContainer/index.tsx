@@ -44,7 +44,7 @@ const NoticesContainer = ({ title, noticesList, nextNotices, loading, searchBar 
             setNext(nextNotices)
         }
 
-    }, [noticesList])
+    }, [noticesList, nextNotices])
 
     React.useEffect(() => {
         const init = async () => {

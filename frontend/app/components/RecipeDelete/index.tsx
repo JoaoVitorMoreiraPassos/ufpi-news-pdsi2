@@ -3,7 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import React from 'react'
 import RUAPI from '@/app/api/Recipe'
-
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 interface Item {
     id: number,
     nome_refeicao: string,
@@ -24,12 +25,13 @@ const RecipeDelete: React.FC<{ item: Item }> = ({ item }) => {
                 }
             }
         } catch {
-            console.log('Erro ao deletar item')
+            toast.error('Erro ao deletar item')
         }
     }
 
     return (
         <div key={item.id} id={item.tipo_refeicao + item.id} className='flex flex-row justify-between items-center w-80  border-b-2 border-solid p-1' >
+            <ToastContainer />
             <p>{item.nome_refeicao}</p>
             <button className=' text-red-500 rounded-xl p-2 text-xl flex items-center justify-center' onClick={
                 () => {

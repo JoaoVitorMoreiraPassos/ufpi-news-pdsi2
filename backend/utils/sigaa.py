@@ -52,6 +52,9 @@ class Sigaa:
 
         subjects = subjects.get("data", [])
         
+        if not subjects:
+            return subjects
+        
         # Utiliza ThreadPoolExecutor para buscar as tarefas em paralelo
         with ThreadPoolExecutor(max_workers=5) as executor:  # Limita o número de threads a 5, ajuste conforme necessário
             future_to_subject = {executor.submit(self.fetch_tasks, subject): subject for subject in subjects}

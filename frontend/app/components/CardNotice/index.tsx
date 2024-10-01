@@ -120,7 +120,6 @@ const CardNotice = ({ data, favorite }: {
                                 if (isFavorite) {
                                     try {
                                         const token = localStorage.getItem('accessToken') ?? "";
-                                        console.log(token)
                                         const response = await NoticeAPI.DeleteFavoritePosts(token, data.id);
                                         if (!response) return;
                                         if (response == null) return;
@@ -135,16 +134,13 @@ const CardNotice = ({ data, favorite }: {
                                 } else {
                                     try {
                                         const token = localStorage.getItem('accessToken') ?? "";
-                                        console.log(token);
                                         const response = await NoticeAPI.CreateFavoritePosts(token, data.id);
                                         if (!response) return;
                                         if (response == null) return;
                                         if (response == undefined) return;
                                         setIsFavorite(true);
                                     } catch (error: any) {
-                                        console.log(error);
                                         if (error.response.status === 401) {
-
                                             window.location.href = '/auth/login';
                                             return;
                                         }

@@ -14,6 +14,8 @@ import Input from '@/app/components/Inputs/Input'
 import { MenuRegister } from '@/app/components/MenuRegister';
 import { format, set } from 'date-fns';
 import CircularProgress from '@mui/material/CircularProgress';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type Item = {
     id: number,
@@ -118,8 +120,8 @@ export default function CadastrarRefeicao() {
                 if (reg && veg && fol) {
                     setAlimentos({ regular: reg, vegan: veg, follow: fol });
                 }
-            } catch {
-                console.log("Erro ao buscar alimentos");
+            } catch (error: any) {
+                toast.error('Erro ao buscar alimentos');
             }
             setLoading(false);
         }
@@ -128,28 +130,24 @@ export default function CadastrarRefeicao() {
     }, [date])
 
 
-    // useEffect(() => { console.log(almoco); console.log(jantar); }, [almoco, jantar])
 
     useEffect(() => {
         const getMenu = async () => {
             const token = localStorage.getItem('accessToken') ?? '';
             if (alimentos.regular.length === 0 && alimentos.vegan.length === 0 && alimentos.follow.length === 0) {
-                console.log("alimentos vazio")
                 return;
             }
             if (!token) {
-                console.log("token vazio")
+
                 return;
             }
             if (!date) {
-                console.log("date vazio")
                 return;
             }
 
             try {
                 const response = await RUAPI.getCardapioByDate(token, date);
                 if (!response) {
-                    console.log("response vazio")
                     return;
                 }
 
@@ -184,7 +182,7 @@ export default function CadastrarRefeicao() {
                 setJantar(jantar_aux);
 
             } catch (error) {
-                console.log(error);
+                toast.error('Erro ao buscar cardápio');
             }
         }
         getMenu();
@@ -192,6 +190,7 @@ export default function CadastrarRefeicao() {
 
     return (
         <div className='my-container'>
+            <ToastContainer />
             {
                 validUser &&
 

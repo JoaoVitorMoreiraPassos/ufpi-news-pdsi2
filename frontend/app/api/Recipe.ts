@@ -1,30 +1,6 @@
 import axios from 'axios';
 
 
-interface Alimento {
-    id: number;
-    tipo_refeicao: string;
-    nome_refeicao: string;
-}
-
-interface Cardapio {
-    id: number;
-    tipo: string;
-    data: string;
-    alimentos: Alimento[];
-}
-
-interface Alimentos {
-    data: {
-        count: number;
-        next: string;
-        previous: string;
-        results: Alimento[];
-    }
-
-}
-
-
 class RUAPI {
     alimentos = process.env.API_URL + "alimentos/"
     cardapio = process.env.API_URL + "cardapios/"

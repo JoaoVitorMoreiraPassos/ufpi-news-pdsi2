@@ -9,14 +9,11 @@ import { useState, useEffect } from 'react';
 import RUAPI from '@/app/api/Recipe';
 import UserAPI from '@/app/api/user';
 
-interface Item {
+type Item = {
     id: number,
     nome_refeicao: string,
     tipo_refeicao: string
 }
-
-
-
 export default function CadastrarCardapio() {
 
     useEffect(() => {

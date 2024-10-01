@@ -6,6 +6,7 @@ import RecipeDelete from '../RecipeDelete'
 import { useState } from 'react';
 import RUAPI from '@/app/api/Recipe';
 import Input from '../Inputs/Input';
+import { toast } from 'react-toastify';
 
 interface Item {
     id: number,
@@ -18,8 +19,6 @@ const RecipeItemRegister = ({ items, title, tipo }: { items: Item[], title: stri
     const [newItem, setNewItem] = useState("");
 
     const add_item = async (type: string) => {
-
-
         try {
             const token = localStorage.getItem('accessToken') ?? "";
             const response = await RUAPI.postAlimento(token, {
@@ -48,7 +47,7 @@ const RecipeItemRegister = ({ items, title, tipo }: { items: Item[], title: stri
                 }
             }
         } catch (error) {
-            console.log(error)
+            toast.error('Erro ao cadastrar item')
         }
 
 

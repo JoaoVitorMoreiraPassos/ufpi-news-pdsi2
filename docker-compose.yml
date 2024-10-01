@@ -5,20 +5,38 @@ networks:
     driver: bridge
 
 services:
-  db:
-    container_name: db
+  mysql:
+    container_name: mysql
     image: mysql:8.0
-    restart: always
-
+    env_file:
+      - .env
     environment:
-      MYSQL_DATABASE: '${MYSQL_DATABASE}'
-      MYSQL_USER: '${MYSQL_USER}'
-      MYSQL_PASSWORD: "${DBMYSQL_PASSWORD}"
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - intra_net
+
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    restart: always
+
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgres
     networks:
       - intra_net
 
@@ -42,14 +60,16 @@ services:
     volumes:
       - ./backend:/app
     depends_on:
-      - db
-    command: sh -c "python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
+      - postgres
+    command: sh -c "python3 manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - .env
     environment:
-      DB_HOST: "db"
-      DB_PORT: 3306
-      DB_USER: "${MYSQL_USER}"
-      DB_PASSWORD: "${DBMYSQL_PASSWORD}"
-      DB_NAME: "${MYSQL_DATABASE}"
+      DB_HOST: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_USER: "${POSTGRES_USER}"
+      DB_PASSWORD: "${POSTGRES_PASSWORD}"
+      DB_NAME: "${POSTGRES_DB}"
     networks:
       - intra_net
 
@@ -62,14 +82,16 @@ services:
     volumes:
       - ./backend:/app
     depends_on:
-      - db
-    command: sh -c "python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8001"
+      - postgres
+    command: sh -c "python3 manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8001"
+    env_file:
+      - .env
     environment:
-      DB_HOST: "db"
-      DB_PORT: 3306
-      DB_USER: "${MYSQL_USER}"
-      DB_PASSWORD: "${DBMYSQL_PASSWORD}"
-      DB_NAME: "${MYSQL_DATABASE}"
+      DB_HOST: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_USER: "${POSTGRES_USER}"
+      DB_PASSWORD: "${POSTGRES_PASSWORD}"
+      DB_NAME: "${POSTGRES_DB}"
     networks:
       - intra_net
 
@@ -85,10 +107,11 @@ services:
       - nginx
     volumes:
       - ./frontend:/app
+    env_file:
+      - .env
     environment:
       REACT_APP_API_URL: "${REACT_APP_API_URL}"
-    networks:
-      - external_net
 
 volumes:
+  postgres_data: {}
   mysql_data: {}

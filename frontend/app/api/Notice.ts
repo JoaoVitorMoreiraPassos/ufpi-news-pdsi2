@@ -21,22 +21,6 @@ interface Comentarios {
     }
 }
 
-interface Favorito {
-    count: number;
-    next: string;
-    previous: string;
-    data: {
-        results: [
-            {
-                id: number;
-                post_favorito: number;
-                autor_favorito: number;
-            }
-        ]
-    }
-
-}
-
 class NoticeAPI {
     url = process.env.API_URLv2 + 'posts/';
     favorite_url = process.env.API_URLv2 + 'favoritos/';

@@ -65,7 +65,6 @@ const Perfil = () => {
                 const response = await UserApi.verifyToken(token);
                 return response;
             } catch (error) {
-                console.log('Erro ao verificar token');
                 return false;
             }
         }
@@ -105,7 +104,7 @@ const Perfil = () => {
                 // visitedUser.foto_perfil = response.foto_perfil;
                 // visitedUser.permissions = [response.post_permissoes, response.refeicao_permissoes];
             } catch (error) {
-                console.log('Erro ao buscar usuário visitado');
+                return;
             }
         }
         const getLoggedUser = async () => {
@@ -116,7 +115,7 @@ const Perfil = () => {
                     setLoggedUser(user);
                 }
             } catch {
-                console.log('Erro ao buscar usuário logado');
+                return;
             }
             try {
                 const token = localStorage.getItem('accessToken') ?? '';
@@ -125,7 +124,7 @@ const Perfil = () => {
                 setSobrenome(response.last_name);
                 setImage(response.foto_perfil);
             } catch {
-                console.log('Erro ao buscar usuário logado');
+                return;
             }
         }
         getVisitedUser();
@@ -147,13 +146,13 @@ const Perfil = () => {
 
 
             } catch (error) {
-                console.log('Erro ao buscar posts do usuário');
+                return;
             }
             setLoadingPosts(false);
         }
 
         getNotices()
-    }, [visitedUser.username]);
+    }, [visitedUser.username, loggedUser.name]);
     React.useEffect(() => {
         const getFavorites = async () => {
             setLoadingFavoritePosts(true);
@@ -163,7 +162,7 @@ const Perfil = () => {
                 setNextFavoritePosts(response.next);
                 setFavoritePosts(response.results);
             } catch {
-                console.log('Erro ao buscar posts favoritos');
+                return;
             }
             setLoadingFavoritePosts(false);
         }
@@ -228,7 +227,7 @@ const Perfil = () => {
                                     if (response == undefined) toast.error('Erro ao atualizar perfil');
                                     toast.success('Perfil atualizado com sucesso');
                                 } catch {
-                                    console.log('Erro ao atualizar perfil');
+                                    toast.error('Erro ao atualizar perfil');
                                 }
                                 setEditModal(false);
                             }}>Salvar</button>

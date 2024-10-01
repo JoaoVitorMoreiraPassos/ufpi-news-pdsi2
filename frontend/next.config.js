@@ -2,7 +2,7 @@ const { sys } = require('typescript');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {};
-// const host = "http://192.168.1.12:8000/";
+// const host = "http://localhost:8000/";
 // const host = "http://10.180.42.72:8000/";
 // get host from env REACT_APP_API_URL
 const host = process.env.REACT_APP_API_URL;

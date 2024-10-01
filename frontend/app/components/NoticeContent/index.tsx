@@ -194,7 +194,7 @@ const NoticeContent = ({ slug }: { slug: string }) => {
         } else {
             setIsFavorite(false);
         }
-    }, [favorites]);
+    }, [favorites, id]);
 
     React.useEffect(() => {
         if (isFavorite) {
@@ -272,9 +272,7 @@ const NoticeContent = ({ slug }: { slug: string }) => {
                             if (response == undefined) return;
                             setIsFavorite(true);
                         } catch (error: any) {
-                            console.log(error);
                             if (error.response.status === 401) {
-
                                 window.location.href = '/auth/login';
                                 return;
                             }

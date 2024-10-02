@@ -32,6 +32,10 @@ module.exports = {
             {
                 protocol: "http",
                 hostname: "*"
+            },
+            {
+                protocol: "https",
+                hostname: host
             }
         ]
     }

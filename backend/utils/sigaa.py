@@ -7,7 +7,7 @@ import sys
 class Sigaa:
 
     def __init__(self, user, password):
-        self.API_HOST = "http://localhost:3001/api/"
+        self.API_HOST = "http://localhost:3000/api/"
         self.user = user
         self.password = password
         self.subjects = None
@@ -23,7 +23,7 @@ class Sigaa:
                 "password": self.password,
                 "accessId": accessId
             }).json()
-        if tasks.get("error"):
+        while tasks.get("error"):
             # tenta novamente
             tasks = requests.post(
                 self.API_HOST + "tasks", json={
@@ -33,7 +33,12 @@ class Sigaa:
                 }).json()
 
         data = tasks.get("data", [])
+        error = tasks.get("error")
+        if error:
+            print(f"Erro ao buscar tarefas da disciplina {accessId}: {error}")
+            return {}
         print(data)
+        print(tasks)
         if data and data.get("tasks"):
             subject["tasks"] = data["tasks"]
         

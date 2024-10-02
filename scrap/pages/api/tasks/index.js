@@ -40,6 +40,7 @@ async function getTasks(user, password, accessId) {
             page.click(`#${accessId}`),
         ]);
     } catch (e) {
+        console.error(e);
         // Se houver um erro ao clicar no link da disciplina, retorna um objeto vazio
         return {
             error: "Erro ao buscar tarefas",

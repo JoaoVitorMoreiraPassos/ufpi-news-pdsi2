@@ -16,6 +16,7 @@ module.exports = {
     },
     reactStrictMode: true,
     images: {
+        domains: [host.replace("https://", ""), 'via.placeholder.com', 'localhost'],
         remotePatterns: [
             {
                 protocol: 'https',

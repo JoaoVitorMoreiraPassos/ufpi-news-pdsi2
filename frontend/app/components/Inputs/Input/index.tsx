@@ -6,7 +6,8 @@ const Input = ({ id, type, placeholder, value, list, min, onKDown, onBlr, onFocu
 
     return (
         <div className='bg-white w-full h-10 Input rounded-lg border-1 border-solid border-gray-600'>
-            <input min={min} id={id ? id : ''} type={type} placeholder={placeholder} onChange={(e) => setValue(e.target.value)} value={value}
+            <input min={min} type={type} placeholder={placeholder} onChange={(e) => setValue(e.target.value)} value={value}
+                {...(id ? { id: id } : {})}
                 className='w-full h-full rounded-lg p-2 outline-none text-gray-900'
                 onKeyDown={(e) => {
                     if (e.key === 'Enter') {

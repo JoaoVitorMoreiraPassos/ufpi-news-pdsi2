@@ -16,7 +16,7 @@ module.exports = {
     },
     reactStrictMode: true,
     images: {
-        domains: [host.replace("https://", ""), 'via.placeholder.com', 'localhost'],
+        domains: ["ufpinews.pythonanywhere.com", 'via.placeholder.com', 'localhost'],
         remotePatterns: [
             {
                 protocol: 'https',
@@ -36,7 +36,7 @@ module.exports = {
             },
             {
                 protocol: "https",
-                hostname: host.replace("https://", "")
+                hostname: "ufpinews.pythonanywhere.com"
             }
         ]
     }

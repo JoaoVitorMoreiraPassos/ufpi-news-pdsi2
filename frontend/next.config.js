@@ -35,7 +35,7 @@ module.exports = {
             },
             {
                 protocol: "https",
-                hostname: host
+                hostname: host.replace("https://", "")
             }
         ]
     }

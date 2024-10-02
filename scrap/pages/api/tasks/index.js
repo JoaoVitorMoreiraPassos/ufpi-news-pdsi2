@@ -58,6 +58,7 @@ async function getTasks(user, password, accessId) {
             await page.click(TaskContainer);
         }
     } catch (e) {
+        console.error(e)
         return {
             error: "Erro ao buscar tarefas",
             tasks: []
@@ -73,6 +74,7 @@ async function getTasks(user, password, accessId) {
         });
 
     } catch (e) {
+        console.error(e)
         return {
             error: "Erro ao buscar tarefas",
             tasks: []
@@ -147,6 +149,7 @@ async function getTasks(user, password, accessId) {
                 }
             }
             catch (erro) {
+                console.error(erro)
                 return {
                     error: "Erro ao buscar tarefas",
                     tasks: []
